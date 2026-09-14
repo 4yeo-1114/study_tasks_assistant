@@ -15,6 +15,10 @@ class TaskService:
         self.initialize()
         return repository.list_tasks(self._db_path, status)
 
+    def get_task(self, task_id: int) -> dict | None:
+        self.initialize()
+        return repository.get_task(self._db_path, task_id)
+
     def create_task(self, task: TaskCreate) -> dict:
         self.initialize()
         return repository.create_task(

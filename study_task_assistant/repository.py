@@ -55,6 +55,20 @@ def list_tasks(db_path: DatabasePath, status: str | None = None) -> list[dict]:
     return [dict(row) for row in rows]
 
 
+def get_task(db_path: DatabasePath, task_id: int) -> dict | None:
+    with closing(sqlite3.connect(db_path)) as connection:
+        connection.row_factory = sqlite3.Row
+        row = connection.execute(
+            """
+            SELECT id, title, status, priority, due_date
+            FROM tasks
+            WHERE id = ?
+            """,
+            (task_id,),
+        ).fetchone()
+    return dict(row) if row is not None else None
+
+
 def create_task(
     db_path: DatabasePath,
     *,

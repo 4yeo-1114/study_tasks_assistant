@@ -1,6 +1,6 @@
 # W3-AI-02 Task Detail Endpoint Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 增加按正整数 ID 查询单条任务的 `GET /tasks/{task_id}` 接口及 404/422 行为。
 
@@ -30,15 +30,15 @@
 - Produces: `TaskService.get_task(task_id: int) -> dict | None`
 - Produces: `GET /tasks/{task_id}` with `TaskRead`, 200 or 404
 
-- [ ] **Step 1: Write failing HTTP behavior tests**
+- [x] **Step 1: Write failing HTTP behavior tests**
 
 Create one task, assert `/tasks/1` returns the created JSON, then assert `/tasks/999` returns status 404 and `{"detail": "找不到任务"}`.
 
-- [ ] **Step 2: Verify RED**
+- [x] **Step 2: Verify RED**
 
 Run the two targeted tests. Expected: 404 for `/tasks/1` because the dynamic route is absent.
 
-- [ ] **Step 3: Implement repository, service and route**
+- [x] **Step 3: Implement repository, service and route**
 
 Repository executes:
 
@@ -50,7 +50,7 @@ WHERE id = ?
 
 API first declares `task_id: int`, calls the service, raises `HTTPException(status_code=404, detail="找不到任务")` for `None`, and otherwise returns the task。正整数约束在 Task 2 通过独立 RED/GREEN 加入。
 
-- [ ] **Step 4: Verify GREEN**
+- [x] **Step 4: Verify GREEN**
 
 Run the targeted tests. Expected: both pass.
 
@@ -66,22 +66,22 @@ Run the targeted tests. Expected: both pass.
 - Consumes: path constraint from Task 1
 - Produces: non-integer and zero IDs return 422; current learning state is recorded
 
-- [ ] **Step 1: Write and run path validation tests**
+- [x] **Step 1: Write and run path validation tests**
 
 Assert `/tasks/not-an-int` and `/tasks/0` return 422. Run them before adding `Path(ge=1)`: the non-integer case already returns 422 from the `int` annotation, while zero returns 404, so the test set is RED for the missing positive-ID constraint.
 
-- [ ] **Step 2: Add the positive-ID constraint and verify GREEN**
+- [x] **Step 2: Add the positive-ID constraint and verify GREEN**
 
 Change the route parameter to `task_id: Annotated[int, Path(ge=1)]`, then rerun the two validation cases and confirm both return 422.
 
-- [ ] **Step 3: Run the full suite**
+- [x] **Step 3: Run the full suite**
 
 Run `..\.venv\Scripts\python.exe -m pytest -v` from `study_task_assistant`; all old and new tests must pass without modifying real `tasks.db`.
 
-- [ ] **Step 4: Update documentation and evidence**
+- [x] **Step 4: Update documentation and evidence**
 
 Document `GET /tasks/{task_id}`, explain path parameters, and record AI/user contribution without raising the learner's level solely because code passes.
 
-- [ ] **Step 5: Commit exact W3-AI-02 files**
+- [x] **Step 5: Commit exact W3-AI-02 files**
 
 Run `git diff --check`, stage only the listed files plus this plan, rerun the full suite, and commit with a concise Conventional Commit message.

@@ -90,3 +90,40 @@ def test_get_tasks_filters_by_status(tmp_path):
     ]
     assert completed_response.status_code == 200
     assert completed_response.json() == []
+
+
+def test_get_task_by_id_returns_created_task(tmp_path):
+    from api import create_app
+
+    client = TestClient(create_app(tmp_path / "test.db"))
+    created = client.post(
+        "/tasks",
+        json={"title": "理解路径参数", "priority": "medium"},
+    ).json()
+
+    response = client.get("/tasks/1")
+
+    assert response.status_code == 200
+    assert response.json() == created
+
+
+def test_get_missing_task_returns_404(tmp_path):
+    from api import create_app
+
+    client = TestClient(create_app(tmp_path / "test.db"))
+
+    response = client.get("/tasks/999")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "找不到任务"}
+
+
+@pytest.mark.parametrize("path", ["/tasks/not-an-int", "/tasks/0"])
+def test_get_task_rejects_invalid_path_id(tmp_path, path):
+    from api import create_app
+
+    client = TestClient(create_app(tmp_path / "test.db"))
+
+    response = client.get(path)
+
+    assert response.status_code == 422
