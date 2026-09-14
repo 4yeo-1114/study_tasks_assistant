@@ -11,9 +11,9 @@ class TaskService:
     def initialize(self) -> None:
         repository.init_db(self._db_path)
 
-    def list_tasks(self) -> list[dict]:
+    def list_tasks(self, status: str | None = None) -> list[dict]:
         self.initialize()
-        return repository.list_tasks(self._db_path)
+        return repository.list_tasks(self._db_path, status)
 
     def create_task(self, task: TaskCreate) -> dict:
         self.initialize()

@@ -66,7 +66,7 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/tasks -ContentType "ap
 
 当前接口：
 
-- `GET /tasks`：返回任务数组，成功状态码为 `200`。
+- `GET /tasks`：返回任务数组，成功状态码为 `200`；可使用 `?status=pending` 或 `?status=completed` 筛选。
 - `POST /tasks`：校验 JSON 并新增任务，成功状态码为 `201`。
 - 请求字段不合法时返回 `422`；路径不存在时返回 `404`。
 

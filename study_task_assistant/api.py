@@ -11,8 +11,8 @@ def create_app(db_path: str | Path) -> FastAPI:
     service = TaskService(db_path)
 
     @app.get("/tasks", response_model=list[TaskRead])
-    def get_tasks():
-        return service.list_tasks()
+    def get_tasks(status: str | None = None):
+        return service.list_tasks(status)
 
     @app.post(
         "/tasks",
