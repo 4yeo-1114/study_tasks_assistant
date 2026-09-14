@@ -1,12 +1,12 @@
 # W3 FastAPI 与 HTTP Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 为现有学习任务助手增加可运行、可测试且使用 SQLite 的 `GET /tasks` 与 `POST /tasks` FastAPI 接口。
 
 **Architecture:** `api.py` 只处理 HTTP，`schemas.py` 声明 Pydantic 输入输出，`service.py` 表达用例，`repository.py` 执行参数化 SQLite。应用工厂接收数据库路径，正式环境使用现有 `tasks.db`，测试使用 pytest 临时目录。
 
-**Tech Stack:** Python 3.10、FastAPI、Pydantic 2、Uvicorn、SQLite、pytest、HTTPX/TestClient
+**Tech Stack:** Python 3.10、FastAPI、Pydantic 2、Uvicorn、SQLite、pytest、HTTPX2/TestClient
 
 ## Global Constraints
 
@@ -46,14 +46,16 @@
 - Produces: `init_db(db_path) -> None`, `list_tasks(db_path) -> list[dict]`
 - Produces: `TaskService.list_tasks() -> list[dict]`
 
-- [ ] **Step 1: Add and install exact W3 dependencies**
+- [x] **Step 1: Add and install exact W3 dependencies**
 
 Write these Python 3.10 compatible packages to `requirements.txt`:
 
 ```text
 fastapi==0.141.1
 uvicorn==0.52.4
-httpx==0.28.1
+httpx2==2.12.0
+pydantic==2.13.5
+pytest==9.1.1
 ```
 
 Then run:
@@ -62,7 +64,7 @@ Then run:
 .\.venv\Scripts\python.exe -m pip install -r .\study_task_assistant\requirements.txt
 ```
 
-- [ ] **Step 2: Write the failing empty-list test**
+- [x] **Step 2: Write the failing empty-list test**
 
 ```python
 def test_get_tasks_returns_empty_list(tmp_path):
@@ -74,7 +76,7 @@ def test_get_tasks_returns_empty_list(tmp_path):
     assert response.json() == []
 ```
 
-- [ ] **Step 3: Run the test and verify RED**
+- [x] **Step 3: Run the test and verify RED**
 
 Run from `study_task_assistant`:
 
@@ -84,7 +86,7 @@ Run from `study_task_assistant`:
 
 Expected: FAIL because `api` or `create_app` does not exist yet.
 
-- [ ] **Step 4: Implement the minimum GET path**
+- [x] **Step 4: Implement the minimum GET path**
 
 Create compatible `tasks` table initialization in `repository.py`, a `SELECT id, title, status, priority, due_date ORDER BY id`, a pass-through `TaskService.list_tasks`, `TaskRead`, and this application boundary:
 
@@ -92,7 +94,6 @@ Create compatible `tasks` table initialization in `repository.py`, a `SELECT id,
 def create_app(db_path: str | Path) -> FastAPI:
     app = FastAPI(title="Study Task Assistant")
     service = TaskService(db_path)
-    service.initialize()
 
     @app.get("/tasks", response_model=list[TaskRead])
     def get_tasks():
@@ -102,8 +103,9 @@ def create_app(db_path: str | Path) -> FastAPI:
 ```
 
 Create `app = create_app(Path(__file__).with_name("tasks.db"))` for Uvicorn.
+The service initializes the selected database lazily on its first GET or POST, so merely importing `api.py` during tests does not open the real database.
 
-- [ ] **Step 5: Verify GREEN**
+- [x] **Step 5: Verify GREEN**
 
 Run the same targeted test. Expected: `1 passed`.
 
@@ -122,15 +124,15 @@ Run the same targeted test. Expected: `1 passed`.
 - Produces: `create_task(db_path, task: TaskCreate) -> dict`
 - Produces: `POST /tasks -> 201 + TaskRead`
 
-- [ ] **Step 1: Write a failing POST persistence test**
+- [x] **Step 1: Write a failing POST persistence test**
 
 The test posts `{"title": "学习 FastAPI", "priority": "high"}`, asserts `201`, ID `1`, status `pending`, then calls `GET /tasks` and asserts the new task is present.
 
-- [ ] **Step 2: Verify RED**
+- [x] **Step 2: Verify RED**
 
 Run the targeted POST test. Expected: FAIL with `405 Method Not Allowed` because the route does not exist.
 
-- [ ] **Step 3: Implement the minimum POST path**
+- [x] **Step 3: Implement the minimum POST path**
 
 Add `TaskCreate`, execute a parameterized `INSERT`, commit, read the inserted row, and add:
 
@@ -140,7 +142,7 @@ def post_task(task: TaskCreate):
     return service.create_task(task)
 ```
 
-- [ ] **Step 4: Verify GREEN and regression**
+- [x] **Step 4: Verify GREEN and regression**
 
 Run both API tests. Expected: `2 passed` and the GET behavior remains unchanged.
 
@@ -154,19 +156,19 @@ Run both API tests. Expected: `2 passed` and the GET behavior remains unchanged.
 - Consumes: `TaskCreate` and both routes
 - Produces: whitespace title, unknown priority and invalid date return `422`; unknown path returns `404`
 
-- [ ] **Step 1: Write failing validation tests**
+- [x] **Step 1: Write failing validation tests**
 
 Add parameterized requests for blank title, priority `urgent`, and date `2026-02-30`. Each must return `422`; a final GET must still return `[]`. Add a separate `GET /missing` assertion for `404`.
 
-- [ ] **Step 2: Verify RED**
+- [x] **Step 2: Verify RED**
 
 Run only validation tests. Expected: at least one invalid request returns `201`, proving constraints are missing.
 
-- [ ] **Step 3: Add exact Pydantic constraints**
+- [x] **Step 3: Add exact Pydantic constraints**
 
 Use `StringConstraints(strip_whitespace=True, min_length=1)`, `Literal['high', 'medium', 'low']`, and a `field_validator` that parses non-null dates with `datetime.strptime(value, '%Y-%m-%d')` and raises `ValueError` for nonexistent dates.
 
-- [ ] **Step 4: Verify GREEN and full API suite**
+- [x] **Step 4: Verify GREEN and full API suite**
 
 Run `pytest test_api.py -v`. Expected: all API tests pass and invalid requests create no rows.
 
@@ -181,7 +183,7 @@ Run `pytest test_api.py -v`. Expected: all API tests pass and invalid requests c
 - Consumes: final `app`, requirements and tests
 - Produces: reproducible W3 commands and a pending learner exercise
 
-- [ ] **Step 1: Run all automated tests**
+- [x] **Step 1: Run all automated tests**
 
 From `study_task_assistant` run:
 
@@ -191,18 +193,18 @@ From `study_task_assistant` run:
 
 Expected: existing CLI tests and new API tests all pass.
 
-- [ ] **Step 2: Smoke-test the real server without changing real task data**
+- [x] **Step 2: Smoke-test the real server without changing real task data**
 
 From `study_task_assistant`, start `..\.venv\Scripts\python.exe -m uvicorn api:app --host 127.0.0.1 --port 8765` in a hidden child process. Send GET requests to `http://127.0.0.1:8765/tasks` and `http://127.0.0.1:8765/docs`, record both status codes, and stop that exact child process in `finally`. GET requests do not modify the real task database. Confirm both responses return `200`.
 
-- [ ] **Step 3: Document reproducible commands**
+- [x] **Step 3: Document reproducible commands**
 
 Add dependency installation, `uvicorn api:app --reload`, `/docs`, example GET/POST requests, status-code meanings, and pytest commands to `readme.md`.
 
-- [ ] **Step 4: Update factual learning records**
+- [x] **Step 4: Update factual learning records**
 
 Record that AI implemented the skeleton and tests. Set W3-AI-01 to “进行中/待用户验收”; do not raise HTTP beyond L0 until the user runs and explains it. Set the next action to user execution, one fault experiment, and the independent `status` filter variation.
 
-- [ ] **Step 5: Check the diff and commit only W3 files**
+- [x] **Step 5: Check the diff and commit only W3 files**
 
 Run `git diff --check`, stage the files listed in this plan, run the full tests again against the staged state, and commit with a concise Conventional Commit message.

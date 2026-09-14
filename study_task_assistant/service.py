@@ -1,0 +1,25 @@
+from pathlib import Path
+
+import repository
+from schemas import TaskCreate
+
+
+class TaskService:
+    def __init__(self, db_path: str | Path) -> None:
+        self._db_path = db_path
+
+    def initialize(self) -> None:
+        repository.init_db(self._db_path)
+
+    def list_tasks(self) -> list[dict]:
+        self.initialize()
+        return repository.list_tasks(self._db_path)
+
+    def create_task(self, task: TaskCreate) -> dict:
+        self.initialize()
+        return repository.create_task(
+            self._db_path,
+            title=task.title,
+            priority=task.priority,
+            due_date=task.due_date,
+        )
