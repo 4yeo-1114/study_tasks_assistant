@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Annotated
 
-from fastapi import FastAPI, HTTPException, Path as FastAPIPath, status
+from fastapi import FastAPI, HTTPException, Path as FastAPIPath, Response, status
 
-from schemas import TaskCreate, TaskPriority, TaskRead
+from schemas import TaskCreate, TaskPriority, TaskRead, TaskStatusUpdate
 from service import TaskService
 
 
@@ -26,6 +26,24 @@ def create_app(db_path: str | Path) -> FastAPI:
         if task is None:
             raise HTTPException(status_code=404, detail="找不到任务")
         return task
+
+    @app.patch("/tasks/{task_id}", response_model=TaskRead)
+    def update_task_status(
+        task_id: Annotated[int, FastAPIPath(ge=1)],
+        update: TaskStatusUpdate,
+    ):
+        task = service.update_task_status(task_id, update.status)
+        if task is None:
+            raise HTTPException(status_code=404, detail="找不到任务")
+        return task
+
+    @app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+    def delete_task(
+        task_id: Annotated[int, FastAPIPath(ge=1)],
+    ) -> Response:
+        if not service.delete_task(task_id):
+            raise HTTPException(status_code=404, detail="找不到任务")
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
 
     @app.post(
         "/tasks",

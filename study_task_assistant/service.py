@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import repository
-from schemas import TaskCreate
+from schemas import TaskCreate, TaskStatus
 
 
 class TaskService:
@@ -26,6 +26,22 @@ class TaskService:
     def get_task(self, task_id: int) -> dict | None:
         self.initialize()
         return repository.get_task(self._db_path, task_id)
+
+    def update_task_status(
+        self,
+        task_id: int,
+        task_status: TaskStatus,
+    ) -> dict | None:
+        self.initialize()
+        return repository.update_task_status(
+            self._db_path,
+            task_id,
+            task_status,
+        )
+
+    def delete_task(self, task_id: int) -> bool:
+        self.initialize()
+        return repository.delete_task(self._db_path, task_id)
 
     def create_task(self, task: TaskCreate) -> dict:
         self.initialize()

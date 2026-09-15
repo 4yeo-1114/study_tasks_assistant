@@ -32,11 +32,11 @@
 **Interfaces:**
 - Produces: `TaskStatus`, `TaskStatusUpdate`, `TaskService.update_task_status()`, `repository.update_task_status()`, `PATCH /tasks/{task_id}`
 
-- [ ] **Step 1: Write failing API tests**
+- [x] **Step 1: Write failing API tests**
 
 Add tests that create a task and PATCH it to completed, verify a following GET is completed, reject `{"status": "invalid"}` without changing the task, and return the Chinese 404 detail for ID 999.
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run:
 
@@ -46,7 +46,7 @@ Run:
 
 Expected: the new tests fail because PATCH currently returns 405.
 
-- [ ] **Step 3: Add the request schema**
+- [x] **Step 3: Add the request schema**
 
 In `schemas.py`, add:
 
@@ -58,17 +58,17 @@ class TaskStatusUpdate(BaseModel):
     status: TaskStatus
 ```
 
-- [ ] **Step 4: Add Repository and Service operations**
+- [x] **Step 4: Add Repository and Service operations**
 
 Add `repository.update_task_status(db_path, task_id, task_status) -> dict | None`. Execute `UPDATE tasks SET status = ? WHERE id = ?`, return `None` when `rowcount` is zero, commit successful changes, then select and return the updated task.
 
 Add `TaskService.update_task_status(task_id, task_status) -> dict | None`, initialize the database and delegate to Repository.
 
-- [ ] **Step 5: Add the PATCH route**
+- [x] **Step 5: Add the PATCH route**
 
 Add `PATCH /tasks/{task_id}` with the existing positive-ID constraint, `TaskStatusUpdate` request body and `TaskRead` response model. Convert a `None` service result to the existing Chinese 404 response.
 
-- [ ] **Step 6: Run PATCH tests and full tests**
+- [x] **Step 6: Run PATCH tests and full tests**
 
 Run the targeted command from Step 2, then:
 
@@ -89,11 +89,11 @@ Expected: all tests pass.
 **Interfaces:**
 - Produces: `TaskService.delete_task()`, `repository.delete_task()`, `DELETE /tasks/{task_id}`
 
-- [ ] **Step 1: Write failing API tests**
+- [x] **Step 1: Write failing API tests**
 
 Add tests that delete an existing task and assert 204 plus an empty body, verify the following GET returns 404, and verify deleting ID 999 returns the Chinese 404 detail.
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run:
 
@@ -103,17 +103,17 @@ Run:
 
 Expected: the new tests fail because DELETE currently returns 405.
 
-- [ ] **Step 3: Add Repository and Service operations**
+- [x] **Step 3: Add Repository and Service operations**
 
 Add `repository.delete_task(db_path, task_id) -> bool`. Execute `DELETE FROM tasks WHERE id = ?`, commit, and return whether `rowcount` is greater than zero.
 
 Add `TaskService.delete_task(task_id) -> bool`, initialize the database and delegate to Repository.
 
-- [ ] **Step 4: Add the DELETE route**
+- [x] **Step 4: Add the DELETE route**
 
 Add `DELETE /tasks/{task_id}` with the existing positive-ID constraint. Convert `False` to the existing 404 response; return an explicit FastAPI `Response` with status 204 for success.
 
-- [ ] **Step 5: Run DELETE tests and full tests**
+- [x] **Step 5: Run DELETE tests and full tests**
 
 Run the targeted command from Step 2, then the full pytest suite. Expected: all tests pass and the successful DELETE body has zero bytes.
 
@@ -127,11 +127,11 @@ Run the targeted command from Step 2, then the full pytest suite. Expected: all 
 **Interfaces:**
 - Verifies: PATCH and DELETE reject zero and non-integer task IDs with 422.
 
-- [ ] **Step 1: Add failing or immediately applicable path tests**
+- [x] **Step 1: Add failing or immediately applicable path tests**
 
 Exercise PATCH and DELETE with `/tasks/0` and `/tasks/not-an-int`. Assert 422 for each request. These tests verify the route declarations reuse the positive-ID contract.
 
-- [ ] **Step 2: Run focused and full verification**
+- [x] **Step 2: Run focused and full verification**
 
 Run:
 
@@ -143,11 +143,11 @@ Run:
 
 Expected: every command exits with code 0.
 
-- [ ] **Step 3: Update learning records**
+- [x] **Step 3: Update learning records**
 
 Record the RED/GREEN evidence and AI contribution. Leave W3-AI-05 awaiting learner acceptance until the learner independently adds the repeated-completion test and explains the status codes and PATCH data flow.
 
-- [ ] **Step 4: Commit the implementation**
+- [x] **Step 4: Commit the implementation**
 
 Stage only the five project source/test files and the two current learning records. Commit with:
 

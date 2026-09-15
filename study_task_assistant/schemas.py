@@ -6,6 +6,7 @@ from pydantic import BaseModel, StringConstraints, field_validator
 
 TaskTitle = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 TaskPriority = Literal["high", "medium", "low"]
+TaskStatus = Literal["pending", "completed"]
 
 # 规定任务创建和读取的字段，即协议。
 
@@ -25,6 +26,10 @@ class TaskCreate(BaseModel):
         except ValueError:
             raise ValueError("due_date 必须是实际存在的 YYYY-MM-DD 日期") from None
         return value
+
+
+class TaskStatusUpdate(BaseModel):
+    status: TaskStatus
 
 
 class TaskRead(BaseModel):

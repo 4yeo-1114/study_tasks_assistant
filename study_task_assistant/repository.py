@@ -93,6 +93,43 @@ def get_task(db_path: DatabasePath, task_id: int) -> dict | None:
     return dict(row) if row is not None else None
 
 
+def update_task_status(
+    db_path: DatabasePath,
+    task_id: int,
+    task_status: str,
+) -> dict | None:
+    with closing(sqlite3.connect(db_path)) as connection:
+        connection.row_factory = sqlite3.Row
+        cursor = connection.execute(
+            "UPDATE tasks SET status = ? WHERE id = ?",
+            (task_status, task_id),
+        )
+        if cursor.rowcount == 0:
+            return None
+        connection.commit()
+        row = connection.execute(
+            """
+            SELECT id, title, status, priority, due_date
+            FROM tasks
+            WHERE id = ?
+            """,
+            (task_id,),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("更新任务后无法读取数据")
+    return dict(row)
+
+
+def delete_task(db_path: DatabasePath, task_id: int) -> bool:
+    with closing(sqlite3.connect(db_path)) as connection:
+        cursor = connection.execute(
+            "DELETE FROM tasks WHERE id = ?",
+            (task_id,),
+        )
+        connection.commit()
+    return cursor.rowcount > 0
+
+
 def create_task(
     db_path: DatabasePath,
     *,
