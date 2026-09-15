@@ -247,3 +247,15 @@ def test_write_routes_reject_invalid_task_id(tmp_path, method, path, json):
     response = client.request(method, path, json=json)
 
     assert response.status_code == 422
+
+
+def test_patch_task_status_is_idempotent(tmp_path):
+    from api import create_app
+
+    client = TestClient(create_app(tmp_path / "test.db"))
+    client.post("/tasks", json={"title": "学习 PATCH"})
+    client.patch("/tasks/1", json={"status": "completed"})
+    response = client.patch("/tasks/1", json={"status": "completed"})
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "completed"
