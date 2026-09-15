@@ -7,12 +7,14 @@ from pydantic import BaseModel, StringConstraints, field_validator
 TaskTitle = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 TaskPriority = Literal["high", "medium", "low"]
 
+# 规定任务创建和读取的字段，即协议。
 
 class TaskCreate(BaseModel):
     title: TaskTitle
     priority: TaskPriority = "medium"
     due_date: str | None = None
 
+    # 每次创建 TaskCreate 对象时，用这个函数校验 due_date 字段。
     @field_validator("due_date")
     @classmethod
     def validate_due_date(cls, value: str | None) -> str | None:

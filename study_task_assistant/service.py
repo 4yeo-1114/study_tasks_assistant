@@ -11,9 +11,17 @@ class TaskService:
     def initialize(self) -> None:
         repository.init_db(self._db_path)
 
-    def list_tasks(self, status: str | None = None) -> list[dict]:
+    def list_tasks(
+        self,
+        status: str | None = None,
+        priority: str | None = None,
+    ) -> list[dict]:
         self.initialize()
-        return repository.list_tasks(self._db_path, status)
+        return repository.list_tasks(
+            self._db_path,
+            status=status,
+            priority=priority,
+        )
 
     def get_task(self, task_id: int) -> dict | None:
         self.initialize()

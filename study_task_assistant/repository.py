@@ -31,10 +31,14 @@ def init_db(db_path: DatabasePath) -> None:
         connection.commit()
 
 
-def list_tasks(db_path: DatabasePath, status: str | None = None) -> list[dict]:
+def list_tasks(
+    db_path: DatabasePath,
+    status: str | None = None,
+    priority: str | None = None,
+) -> list[dict]:
     with closing(sqlite3.connect(db_path)) as connection:
         connection.row_factory = sqlite3.Row
-        if status is None:
+        if status is None and priority is None:
             rows = connection.execute(
                 """
                 SELECT id, title, status, priority, due_date
@@ -42,7 +46,7 @@ def list_tasks(db_path: DatabasePath, status: str | None = None) -> list[dict]:
                 ORDER BY id
                 """
             ).fetchall()
-        else:
+        elif status is not None and priority is None:
             rows = connection.execute(
                 """
                 SELECT id, title, status, priority, due_date
@@ -51,6 +55,26 @@ def list_tasks(db_path: DatabasePath, status: str | None = None) -> list[dict]:
                 ORDER BY id
                 """,
                 (status,),
+            ).fetchall()
+        elif status is None and priority is not None:
+            rows = connection.execute(
+                """
+                SELECT id, title, status, priority, due_date
+                FROM tasks
+                WHERE priority = ?
+                ORDER BY id
+                """,
+                (priority,),
+            ).fetchall()
+        else:
+            rows = connection.execute(
+                """
+                SELECT id, title, status, priority, due_date
+                FROM tasks
+                WHERE status = ? AND priority = ?
+                ORDER BY id
+                """,
+                (status, priority),
             ).fetchall()
     return [dict(row) for row in rows]
 

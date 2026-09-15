@@ -3,7 +3,7 @@ from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Path as FastAPIPath, status
 
-from schemas import TaskCreate, TaskRead
+from schemas import TaskCreate, TaskPriority, TaskRead
 from service import TaskService
 
 
@@ -13,8 +13,11 @@ def create_app(db_path: str | Path) -> FastAPI:
 
     # list[TaskRead] 表示响应是列表，且每个元素都符合 TaskRead。
     @app.get("/tasks", response_model=list[TaskRead])
-    def get_tasks(status: str | None = None):
-        return service.list_tasks(status)
+    def get_tasks(
+        status: str | None = None,
+        priority: TaskPriority | None = None,
+    ):
+        return service.list_tasks(status=status, priority=priority)
 
     # 单条任务响应只需要一个 TaskRead；task_id 必须是大于等于 1 的整数。
     @app.get("/tasks/{task_id}", response_model=TaskRead)

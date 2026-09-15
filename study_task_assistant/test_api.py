@@ -127,3 +127,38 @@ def test_get_task_rejects_invalid_path_id(tmp_path, path):
     response = client.get(path)
 
     assert response.status_code == 422
+
+
+def test_get_tasks_filters_by_priority(tmp_path):
+    from api import create_app
+
+    client = TestClient(create_app(tmp_path / "test.db"))
+
+    created = client.post(
+        "/tasks",
+        json={"title": "理解路径参数", "priority": "high"},
+    ).json()
+
+    client.post(
+        "/tasks",
+        json={"title": "理解查询参数", "priority": "low"},
+    )
+
+    response = client.get("/tasks?priority=high")
+
+    assert response.status_code == 200
+    assert response.json() == [created]
+
+    matching_combination = client.get("/tasks?status=pending&priority=high")
+
+    assert matching_combination.status_code == 200
+    assert matching_combination.json() == [created]
+
+    response1 = client.get("/tasks?status=completed&priority=high")
+
+    assert response1.status_code == 200
+    assert response1.json() == []
+
+    response2 = client.get("/tasks?priority=urgent")
+
+    assert response2.status_code == 422
