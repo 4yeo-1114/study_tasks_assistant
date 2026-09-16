@@ -16,6 +16,12 @@ config = context.config
 target_metadata = Base.metadata
 
 
+def include_name(name, type_, parent_names):
+    if type_ == "table":
+        return name in target_metadata.tables
+    return True
+
+
 def database_url() -> str:
     return (
         config.attributes.get("database_url")
@@ -28,6 +34,7 @@ def run_migrations_offline() -> None:
     context.configure(
         url=database_url(),
         target_metadata=target_metadata,
+        include_name=include_name,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
@@ -39,7 +46,11 @@ def run_migrations_online() -> None:
     engine = create_engine(database_url(), poolclass=NullPool)
     try:
         with engine.connect() as connection:
-            context.configure(connection=connection, target_metadata=target_metadata)
+            context.configure(
+                connection=connection,
+                target_metadata=target_metadata,
+                include_name=include_name,
+            )
             with context.begin_transaction():
                 context.run_migrations()
     finally:

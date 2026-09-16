@@ -7,13 +7,26 @@ from migration import upgrade_database
 
 def migrated_app(database_location):
     upgrade_database(normalize_database_url(database_location))
-    return create_app(database_location)
+    return create_app(database_location, token_secret="test-only-secret-key-at-least-32-bytes")
+
+
+def authenticated_client(database_location):
+    client = TestClient(migrated_app(database_location))
+    assert client.post(
+        "/auth/register",
+        json={"username": "test_user", "password": "test-password-123"},
+    ).status_code == 201
+    token = client.post(
+        "/auth/login", data={"username": "test_user", "password": "test-password-123"}
+    ).json()["access_token"]
+    client.headers.update({"Authorization": f"Bearer {token}"})
+    return client
 
 
 def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
 
     url = f"sqlite+pysqlite:///{(tmp_path / 'url.db').as_posix()}"
-    with TestClient(migrated_app(url)) as client:
+    with authenticated_client(url) as client:
         response = client.post("/tasks", json={"title": "URL 配置"})
 
     assert response.status_code == 201
@@ -22,7 +35,7 @@ def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
 
 def test_get_tasks_returns_empty_list(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.get("/tasks")
 
@@ -32,7 +45,7 @@ def test_get_tasks_returns_empty_list(tmp_path):
 
 def test_post_task_persists_and_returns_created_task(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.post(
         "/tasks",
@@ -60,7 +73,7 @@ def test_post_task_persists_and_returns_created_task(tmp_path):
 )
 def test_post_task_rejects_invalid_payload_without_writing(tmp_path, payload):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.post("/tasks", json=payload)
 
@@ -70,7 +83,7 @@ def test_post_task_rejects_invalid_payload_without_writing(tmp_path, payload):
 
 def test_unknown_path_returns_404(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.get("/missing")
 
@@ -79,7 +92,7 @@ def test_unknown_path_returns_404(tmp_path):
 
 def test_get_tasks_filters_by_status(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.post(
         "/tasks",
@@ -107,7 +120,7 @@ def test_get_tasks_filters_by_status(tmp_path):
 
 def test_get_task_by_id_returns_created_task(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
     created = client.post(
         "/tasks",
         json={"title": "理解路径参数", "priority": "medium"},
@@ -121,7 +134,7 @@ def test_get_task_by_id_returns_created_task(tmp_path):
 
 def test_get_missing_task_returns_404(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.get("/tasks/999")
 
@@ -132,7 +145,7 @@ def test_get_missing_task_returns_404(tmp_path):
 @pytest.mark.parametrize("path", ["/tasks/not-an-int", "/tasks/0"])
 def test_get_task_rejects_invalid_path_id(tmp_path, path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.get(path)
 
@@ -141,7 +154,7 @@ def test_get_task_rejects_invalid_path_id(tmp_path, path):
 
 def test_get_tasks_filters_by_priority(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     created = client.post(
         "/tasks",
@@ -175,7 +188,7 @@ def test_get_tasks_filters_by_priority(tmp_path):
 
 def test_patch_task_status_persists(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
     client.post("/tasks", json={"title": "学习 PATCH"})
 
     response = client.patch("/tasks/1", json={"status": "completed"})
@@ -193,7 +206,7 @@ def test_patch_task_status_persists(tmp_path):
 
 def test_patch_task_rejects_invalid_status_without_writing(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
     client.post("/tasks", json={"title": "保持 pending"})
 
     response = client.patch("/tasks/1", json={"status": "invalid"})
@@ -204,7 +217,7 @@ def test_patch_task_rejects_invalid_status_without_writing(tmp_path):
 
 def test_patch_missing_task_returns_404(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.patch("/tasks/999", json={"status": "completed"})
 
@@ -214,7 +227,7 @@ def test_patch_missing_task_returns_404(tmp_path):
 
 def test_delete_task_removes_it(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
     client.post("/tasks", json={"title": "待删除任务"})
 
     response = client.delete("/tasks/1")
@@ -226,7 +239,7 @@ def test_delete_task_removes_it(tmp_path):
 
 def test_delete_missing_task_returns_404(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.delete("/tasks/999")
 
@@ -245,7 +258,7 @@ def test_delete_missing_task_returns_404(tmp_path):
 )
 def test_write_routes_reject_invalid_task_id(tmp_path, method, path, json):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
 
     response = client.request(method, path, json=json)
 
@@ -254,7 +267,7 @@ def test_write_routes_reject_invalid_task_id(tmp_path, method, path, json):
 
 def test_patch_task_status_is_idempotent(tmp_path):
 
-    client = TestClient(migrated_app(tmp_path / "test.db"))
+    client = authenticated_client(tmp_path / "test.db")
     client.post("/tasks", json={"title": "学习 PATCH"})
     client.patch("/tasks/1", json={"status": "completed"})
     response = client.patch("/tasks/1", json={"status": "completed"})

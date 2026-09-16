@@ -22,10 +22,11 @@ class TaskRepository:
 
     def list_tasks(
         self,
+        user_id: int,
         status: str | None = None,
         priority: str | None = None,
     ) -> list[dict]:
-        statement = select(Task)
+        statement = select(Task).where(Task.owner_id == user_id)
         if status is not None:
             statement = statement.where(Task.status == status)
         if priority is not None:
@@ -36,14 +37,17 @@ class TaskRepository:
             tasks = session.scalars(statement).all()
             return [_task_to_dict(task) for task in tasks]
 
-    def get_task(self, task_id: int) -> dict | None:
+    def get_task(self, user_id: int, task_id: int) -> dict | None:
         with self._sessions() as session:
-            task = session.get(Task, task_id)
+            task = session.scalar(
+                select(Task).where(Task.id == task_id, Task.owner_id == user_id)
+            )
             return _task_to_dict(task) if task is not None else None
 
     def create_task(
         self,
         *,
+        user_id: int,
         title: str,
         priority: str,
         due_date: date | None,
@@ -51,6 +55,7 @@ class TaskRepository:
         # with 结束时关闭 Session，底层连接通常归还连接池供后续操作复用。
         with self._sessions.begin() as session:
             task = Task(
+                owner_id=user_id,
                 title=title,
                 status="pending",
                 priority=priority,
@@ -63,20 +68,25 @@ class TaskRepository:
 
     def update_task_status(
         self,
+        user_id: int,
         task_id: int,
         task_status: str,
     ) -> dict | None:
         with self._sessions.begin() as session:
-            task = session.get(Task, task_id)
+            task = session.scalar(
+                select(Task).where(Task.id == task_id, Task.owner_id == user_id)
+            )
             if task is None:
                 return None
             task.status = task_status
             session.flush()
             return _task_to_dict(task)
 
-    def delete_task(self, task_id: int) -> bool:
+    def delete_task(self, user_id: int, task_id: int) -> bool:
         with self._sessions.begin() as session:
-            task = session.get(Task, task_id)
+            task = session.scalar(
+                select(Task).where(Task.id == task_id, Task.owner_id == user_id)
+            )
             if task is None:
                 return False
             session.delete(task)

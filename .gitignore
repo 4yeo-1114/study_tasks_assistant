@@ -4,5 +4,6 @@ __pycache__/
 *.pyc
 study_task_assistant/tasks.json
 *.db
+*.dump
 .env
 study_task_assistant/.env
