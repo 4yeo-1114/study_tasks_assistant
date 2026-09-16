@@ -1,17 +1,47 @@
+import os
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated
 
 from fastapi import FastAPI, HTTPException, Path as FastAPIPath, Response, status
 
+from database import Database
+from repository import TaskRepository
 from schemas import TaskCreate, TaskPriority, TaskRead, TaskStatusUpdate
 from service import TaskService
 
 
-def create_app(db_path: str | Path) -> FastAPI:
-    app = FastAPI(title="Study Task Assistant")
-    service = TaskService(db_path)
+def normalize_database_url(value: str | Path) -> str:
+    if isinstance(value, Path):
+        return f"sqlite+pysqlite:///{value.resolve().as_posix()}"
+    if "://" in value:
+        return value
+    return f"sqlite+pysqlite:///{Path(value).resolve().as_posix()}"
 
-    # list[TaskRead] 表示响应是列表，且每个元素都符合 TaskRead。
+
+def get_default_database_url() -> str:
+    default_path = Path(__file__).with_name("tasks.db").resolve().as_posix()
+    return os.environ.get(
+        "DATABASE_URL",
+        f"sqlite+pysqlite:///{default_path}",
+    )
+
+
+def create_app(database_location: str | Path) -> FastAPI:
+    database = Database(normalize_database_url(database_location))
+    database.create_schema()
+    service = TaskService(TaskRepository(database.sessions))
+
+    @asynccontextmanager
+    async def lifespan(_: FastAPI):
+        try:
+            yield
+        finally:
+            database.dispose()
+
+    app = FastAPI(title="Study Task Assistant", lifespan=lifespan)
+    app.state.database = database
+
     @app.get("/tasks", response_model=list[TaskRead])
     def get_tasks(
         status: str | None = None,
@@ -19,7 +49,6 @@ def create_app(db_path: str | Path) -> FastAPI:
     ):
         return service.list_tasks(status=status, priority=priority)
 
-    # 单条任务响应只需要一个 TaskRead；task_id 必须是大于等于 1 的整数。
     @app.get("/tasks/{task_id}", response_model=TaskRead)
     def get_task(task_id: Annotated[int, FastAPIPath(ge=1)]):
         task = service.get_task(task_id)
@@ -50,14 +79,10 @@ def create_app(db_path: str | Path) -> FastAPI:
         response_model=TaskRead,
         status_code=status.HTTP_201_CREATED,
     )
-    # 收到 POST JSON
-    # → FastAPI 根据 TaskCreate 创建 Pydantic 模型
-    # → 自动校验字段并调用对应校验器
-    # → 校验成功才进入 post_task()；失败则返回 422
     def post_task(task: TaskCreate):
         return service.create_task(task)
 
     return app
 
 
-app = create_app(Path(__file__).with_name("tasks.db"))
+app = create_app(get_default_database_url())

@@ -2,6 +2,17 @@ import pytest
 from fastapi.testclient import TestClient
 
 
+def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
+    from api import create_app
+
+    url = f"sqlite+pysqlite:///{(tmp_path / 'url.db').as_posix()}"
+    with TestClient(create_app(url)) as client:
+        response = client.post("/tasks", json={"title": "URL 配置"})
+
+    assert response.status_code == 201
+    assert response.json()["title"] == "URL 配置"
+
+
 def test_get_tasks_returns_empty_list(tmp_path):
     from api import create_app
 
