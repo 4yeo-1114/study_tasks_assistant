@@ -67,7 +67,7 @@
 ## 测试设计
 
 1. 先新增一个 Repository 行为测试，要求 SQLAlchemy Repository 在临时 SQLite 中完成创建和读取；在实现前确认测试因模块/接口不存在而失败。
-2. 迁移实现后运行现有 API 测试，确保 24 个行为不回归。测试显式传入临时 SQLite database URL，不依赖开发环境变量。
+2. 迁移实现后运行现有 API 测试，确保当前实测的 22 个行为不回归。测试显式传入临时 SQLite database URL，不依赖开发环境变量。
 3. 新增 opt-in PostgreSQL 集成测试，只在设置 `TEST_DATABASE_URL` 时运行；目标是专用 `study_tasks_test` 数据库。测试建表、清理、创建和读取，不操作练习表或实际应用数据库。
 4. 手工启动服务，以 `DATABASE_URL` 连接 `study_tasks`，通过 HTTP 创建任务并在 psql 查询 `tasks` 表核对。
 5. 将测试 URL 端口改成一个未监听端口，保留完整异常类型与关键错误，用户据此指出失败发生在 Repository 建立数据库连接之前/期间，而不是 HTTP 路由校验。
