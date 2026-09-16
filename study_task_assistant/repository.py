@@ -48,6 +48,7 @@ class TaskRepository:
         priority: str,
         due_date: date | None,
     ) -> dict:
+        # with 结束时关闭 Session，底层连接通常归还连接池供后续操作复用。
         with self._sessions.begin() as session:
             task = Task(
                 title=title,
@@ -56,6 +57,7 @@ class TaskRepository:
                 due_date=due_date,
             )
             session.add(task)
+            # flush 将 INSERT 发给数据库，以便取得生成的 ID。
             session.flush()
             return _task_to_dict(task)
 

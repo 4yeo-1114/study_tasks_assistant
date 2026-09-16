@@ -1,13 +1,14 @@
 from datetime import date
 
 from database import Database
+from migration import upgrade_database
 from repository import TaskRepository
 
 
 def test_repository_crud_uses_sessions_and_persists(tmp_path):
     url = f"sqlite+pysqlite:///{(tmp_path / 'repo.db').as_posix()}"
+    upgrade_database(url)
     database = Database(url)
-    database.create_schema()
     repository = TaskRepository(database.sessions)
 
     created = repository.create_task(

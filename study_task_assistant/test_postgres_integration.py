@@ -4,6 +4,7 @@ import pytest
 from sqlalchemy.engine import make_url
 
 from database import Database
+from migration import upgrade_database
 from models import Base
 from repository import TaskRepository
 
@@ -17,7 +18,9 @@ def test_postgres_repository_round_trip():
 
     database = Database(raw_url)
     Base.metadata.drop_all(database.engine)
-    database.create_schema()
+    with database.engine.begin() as connection:
+        connection.exec_driver_sql("DROP TABLE IF EXISTS alembic_version")
+    upgrade_database(raw_url)
     try:
         repository = TaskRepository(database.sessions)
         created = repository.create_task(
@@ -28,4 +31,6 @@ def test_postgres_repository_round_trip():
         assert repository.get_task(created["id"]) == created
     finally:
         Base.metadata.drop_all(database.engine)
+        with database.engine.begin() as connection:
+            connection.exec_driver_sql("DROP TABLE IF EXISTS alembic_version")
         database.dispose()

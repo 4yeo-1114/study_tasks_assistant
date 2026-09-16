@@ -29,7 +29,6 @@ def get_default_database_url() -> str:
 
 def create_app(database_location: str | Path) -> FastAPI:
     database = Database(normalize_database_url(database_location))
-    database.create_schema()
     service = TaskService(TaskRepository(database.sessions))
 
     @asynccontextmanager

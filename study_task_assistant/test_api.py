@@ -1,12 +1,19 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from api import create_app, normalize_database_url
+from migration import upgrade_database
+
+
+def migrated_app(database_location):
+    upgrade_database(normalize_database_url(database_location))
+    return create_app(database_location)
+
 
 def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
-    from api import create_app
 
     url = f"sqlite+pysqlite:///{(tmp_path / 'url.db').as_posix()}"
-    with TestClient(create_app(url)) as client:
+    with TestClient(migrated_app(url)) as client:
         response = client.post("/tasks", json={"title": "URL 配置"})
 
     assert response.status_code == 201
@@ -14,9 +21,8 @@ def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
 
 
 def test_get_tasks_returns_empty_list(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.get("/tasks")
 
@@ -25,9 +31,8 @@ def test_get_tasks_returns_empty_list(tmp_path):
 
 
 def test_post_task_persists_and_returns_created_task(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.post(
         "/tasks",
@@ -54,9 +59,8 @@ def test_post_task_persists_and_returns_created_task(tmp_path):
     ],
 )
 def test_post_task_rejects_invalid_payload_without_writing(tmp_path, payload):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.post("/tasks", json=payload)
 
@@ -65,9 +69,8 @@ def test_post_task_rejects_invalid_payload_without_writing(tmp_path, payload):
 
 
 def test_unknown_path_returns_404(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.get("/missing")
 
@@ -75,9 +78,8 @@ def test_unknown_path_returns_404(tmp_path):
 
 
 def test_get_tasks_filters_by_status(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.post(
         "/tasks",
@@ -104,9 +106,8 @@ def test_get_tasks_filters_by_status(tmp_path):
 
 
 def test_get_task_by_id_returns_created_task(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
     created = client.post(
         "/tasks",
         json={"title": "理解路径参数", "priority": "medium"},
@@ -119,9 +120,8 @@ def test_get_task_by_id_returns_created_task(tmp_path):
 
 
 def test_get_missing_task_returns_404(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.get("/tasks/999")
 
@@ -131,9 +131,8 @@ def test_get_missing_task_returns_404(tmp_path):
 
 @pytest.mark.parametrize("path", ["/tasks/not-an-int", "/tasks/0"])
 def test_get_task_rejects_invalid_path_id(tmp_path, path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.get(path)
 
@@ -141,9 +140,8 @@ def test_get_task_rejects_invalid_path_id(tmp_path, path):
 
 
 def test_get_tasks_filters_by_priority(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     created = client.post(
         "/tasks",
@@ -176,9 +174,8 @@ def test_get_tasks_filters_by_priority(tmp_path):
 
 
 def test_patch_task_status_persists(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
     client.post("/tasks", json={"title": "学习 PATCH"})
 
     response = client.patch("/tasks/1", json={"status": "completed"})
@@ -195,9 +192,8 @@ def test_patch_task_status_persists(tmp_path):
 
 
 def test_patch_task_rejects_invalid_status_without_writing(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
     client.post("/tasks", json={"title": "保持 pending"})
 
     response = client.patch("/tasks/1", json={"status": "invalid"})
@@ -207,9 +203,8 @@ def test_patch_task_rejects_invalid_status_without_writing(tmp_path):
 
 
 def test_patch_missing_task_returns_404(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.patch("/tasks/999", json={"status": "completed"})
 
@@ -218,9 +213,8 @@ def test_patch_missing_task_returns_404(tmp_path):
 
 
 def test_delete_task_removes_it(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
     client.post("/tasks", json={"title": "待删除任务"})
 
     response = client.delete("/tasks/1")
@@ -231,9 +225,8 @@ def test_delete_task_removes_it(tmp_path):
 
 
 def test_delete_missing_task_returns_404(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.delete("/tasks/999")
 
@@ -251,9 +244,8 @@ def test_delete_missing_task_returns_404(tmp_path):
     ],
 )
 def test_write_routes_reject_invalid_task_id(tmp_path, method, path, json):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
 
     response = client.request(method, path, json=json)
 
@@ -261,9 +253,8 @@ def test_write_routes_reject_invalid_task_id(tmp_path, method, path, json):
 
 
 def test_patch_task_status_is_idempotent(tmp_path):
-    from api import create_app
 
-    client = TestClient(create_app(tmp_path / "test.db"))
+    client = TestClient(migrated_app(tmp_path / "test.db"))
     client.post("/tasks", json={"title": "学习 PATCH"})
     client.patch("/tasks/1", json={"status": "completed"})
     response = client.patch("/tasks/1", json={"status": "completed"})
