@@ -1,6 +1,6 @@
 # PostgreSQL 与 SQLAlchemy 迁移 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 让学习任务助手使用同一套 SQLAlchemy Repository 支持测试 SQLite 与实际 PostgreSQL，并验证连接池、事务和错误端口故障。
 
@@ -34,7 +34,7 @@
 - Produces: `TaskRepository(session_factory)` 及 `list_tasks`、`get_task`、`create_task`、`update_task_status`、`delete_task`。
 - Repository 返回包含 `id/title/status/priority/due_date` 的普通字典；`due_date` 为 ISO 日期字符串或 `None`。
 
-- [ ] **Step 1: 添加并安装确定版本的依赖**
+- [x] **Step 1: 添加并安装确定版本的依赖**
 
 向 `requirements.txt` 添加：
 
@@ -51,7 +51,7 @@ psycopg[binary]==3.3.5
 
 预期：安装成功，`python -c "import sqlalchemy, psycopg"` 退出码为 0。
 
-- [ ] **Step 2: 先写 Repository 行为测试**
+- [x] **Step 2: 先写 Repository 行为测试**
 
 创建 `test_repository.py`，测试使用文件型临时 SQLite：
 
@@ -88,7 +88,7 @@ def test_repository_crud_uses_sessions_and_persists(tmp_path):
     database.dispose()
 ```
 
-- [ ] **Step 3: 运行测试并确认 RED**
+- [x] **Step 3: 运行测试并确认 RED**
 
 运行：
 
@@ -98,7 +98,7 @@ def test_repository_crud_uses_sessions_and_persists(tmp_path):
 
 预期：因 `database`/`models` 或 `TaskRepository` 尚不存在而失败；不能是测试语法错误。
 
-- [ ] **Step 4: 实现 `models.py`**
+- [x] **Step 4: 实现 `models.py`**
 
 定义 ORM 基类和任务表：
 
@@ -127,7 +127,7 @@ class Task(Base):
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
 ```
 
-- [ ] **Step 5: 实现 `database.py`**
+- [x] **Step 5: 实现 `database.py`**
 
 ```python
 from sqlalchemy import create_engine
@@ -158,7 +158,7 @@ class Database:
         self.engine.dispose()
 ```
 
-- [ ] **Step 6: 用最小 SQLAlchemy 实现重写 `repository.py`**
+- [x] **Step 6: 用最小 SQLAlchemy 实现重写 `repository.py`**
 
 实现 `TaskRepository`。查询使用 `select(Task).order_by(Task.id)` 并按非空筛选条件追加 `.where()`；单条读取使用 `session.get(Task, task_id)`；写入使用 `with self._sessions.begin() as session:`。统一转换函数：
 
@@ -175,7 +175,7 @@ def _task_to_dict(task: Task) -> dict:
 
 创建时 `session.add(task)` 后调用 `session.flush()` 取得 ID；更新和删除找不到任务时返回 `None`/`False`；不要在 Repository 外暴露 ORM 对象。
 
-- [ ] **Step 7: 运行 Repository 测试并确认 GREEN**
+- [x] **Step 7: 运行 Repository 测试并确认 GREEN**
 
 运行：
 
@@ -185,7 +185,7 @@ def _task_to_dict(task: Task) -> dict:
 
 预期：`1 passed`。
 
-- [ ] **Step 8: 提交 Task 1**
+- [x] **Step 8: 提交 Task 1**
 
 ```powershell
 git add study_task_assistant/database.py study_task_assistant/models.py study_task_assistant/repository.py study_task_assistant/test_repository.py study_task_assistant/requirements.txt
@@ -208,7 +208,7 @@ git commit -m "feat(db): add sqlalchemy task repository"
 - Produces: `create_app(database: str | Path) -> FastAPI`，兼容现有 Path 测试并支持 SQLAlchemy URL。
 - Produces: `get_default_database_url() -> str`，读取 `DATABASE_URL` 或返回项目 SQLite URL。
 
-- [ ] **Step 1: 写 URL 接入的失败测试**
+- [x] **Step 1: 写 URL 接入的失败测试**
 
 向 `test_api.py` 添加：
 
@@ -224,7 +224,7 @@ def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
     assert response.json()["title"] == "URL 配置"
 ```
 
-- [ ] **Step 2: 运行目标测试并确认 RED**
+- [x] **Step 2: 运行目标测试并确认 RED**
 
 运行：
 
@@ -234,15 +234,15 @@ def test_create_app_accepts_sqlalchemy_database_url(tmp_path):
 
 预期：旧 `sqlite3.connect()` 把 URL 当文件路径而失败。
 
-- [ ] **Step 3: 调整 Pydantic 日期类型**
+- [x] **Step 3: 调整 Pydantic 日期类型**
 
 将 `TaskCreate.due_date` 和 `TaskRead.due_date` 改为 `date | None`，删除手写 `datetime.strptime` 校验器。Pydantic 继续拒绝不存在的日期，并把 JSON 响应序列化为 `YYYY-MM-DD`。
 
-- [ ] **Step 4: 改造 Service 依赖**
+- [x] **Step 4: 改造 Service 依赖**
 
 `TaskService.__init__` 接收 `TaskRepository`；删除路径字段和每次请求的 `initialize()`；所有方法直接调用 `self._repository`。方法名和返回值保持不变。
 
-- [ ] **Step 5: 改造 FastAPI 应用工厂**
+- [x] **Step 5: 改造 FastAPI 应用工厂**
 
 实现 URL 归一化：
 
@@ -263,11 +263,11 @@ def get_default_database_url() -> str:
     )
 ```
 
-- [ ] **Step 6: 运行 URL 目标测试并确认 GREEN**
+- [x] **Step 6: 运行 URL 目标测试并确认 GREEN**
 
 运行同 Step 2，预期 `1 passed`。
 
-- [ ] **Step 7: 运行全部 API 回归测试**
+- [x] **Step 7: 运行全部 API 回归测试**
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest study_task_assistant\test_api.py -q
@@ -275,7 +275,7 @@ def get_default_database_url() -> str:
 
 预期：原 22 条加新增 1 条，共 `23 passed`；允许现有 Starlette/anyio 第三方弃用警告，不允许新增应用警告。
 
-- [ ] **Step 8: 提交 Task 2**
+- [x] **Step 8: 提交 Task 2**
 
 ```powershell
 git add study_task_assistant/schemas.py study_task_assistant/service.py study_task_assistant/api.py study_task_assistant/test_api.py
@@ -296,7 +296,7 @@ git commit -m "refactor(api): use sqlalchemy database sessions"
 - Consumes: `TEST_DATABASE_URL`，且 URL 的 database 必须精确为 `study_tasks_test`。
 - Produces: 一条 opt-in 真实 PostgreSQL CRUD 集成测试。
 
-- [ ] **Step 1: 写 PostgreSQL 集成测试**
+- [x] **Step 1: 写 PostgreSQL 集成测试**
 
 ```python
 import os
@@ -332,7 +332,7 @@ def test_postgres_repository_round_trip():
         database.dispose()
 ```
 
-- [ ] **Step 2: 无环境变量运行并验证安全跳过**
+- [x] **Step 2: 无环境变量运行并验证安全跳过**
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest study_task_assistant\test_postgres_integration.py -q
@@ -340,7 +340,7 @@ def test_postgres_repository_round_trip():
 
 预期：`1 skipped`，不会连接或清理任意数据库。
 
-- [ ] **Step 3: 添加配置示例和忽略规则**
+- [x] **Step 3: 添加配置示例和忽略规则**
 
 `.env.example`：
 
@@ -356,7 +356,7 @@ TEST_DATABASE_URL=postgresql+psycopg://USER:PASSWORD@127.0.0.1:5432/study_tasks_
 study_task_assistant/.env
 ```
 
-- [ ] **Step 4: 创建专用测试数据库**
+- [x] **Step 4: 创建专用测试数据库**
 
 先查询，再只在不存在时创建：
 
@@ -367,11 +367,11 @@ docker exec study-postgres psql -U study -d postgres -c "CREATE DATABASE study_t
 
 第二条命令仅在第一条没有输出 `1` 时执行。
 
-- [ ] **Step 5: 使用容器已有凭据运行真实集成测试**
+- [x] **Step 5: 使用容器已有凭据运行真实集成测试**
 
 在 PowerShell 中从容器配置读取密码到进程变量，不把值写入输出或文件；对密码做 URL 编码后构造 `TEST_DATABASE_URL`，运行目标测试。预期：`1 passed`，结束后测试数据库不存在 `tasks` 表。
 
-- [ ] **Step 6: 运行全部本地测试**
+- [x] **Step 6: 运行全部本地测试**
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest study_task_assistant -q
@@ -379,7 +379,7 @@ docker exec study-postgres psql -U study -d postgres -c "CREATE DATABASE study_t
 
 预期：Repository 和 API 共 24 条通过，PostgreSQL 测试在未设置 URL 的普通运行中跳过。
 
-- [ ] **Step 7: 检查敏感信息和提交**
+- [x] **Step 7: 检查敏感信息和提交**
 
 ```powershell
 git diff --check
@@ -403,7 +403,7 @@ git commit -m "test(db): add isolated postgres integration test"
 - Produces: HTTP POST/GET 与 PostgreSQL `tasks` 表一致的证据。
 - Produces: 错误端口连接异常的学习证据，但不将 AI 的定位记为用户独立 L3。
 
-- [ ] **Step 1: 用 PostgreSQL URL 启动实际服务**
+- [x] **Step 1: 用 PostgreSQL URL 启动实际服务**
 
 在不打印密码的 PowerShell 进程中设置 `DATABASE_URL`，运行：
 
@@ -413,7 +413,7 @@ git commit -m "test(db): add isolated postgres integration test"
 
 预期：Uvicorn 启动，PostgreSQL 出现 `tasks` 表。
 
-- [ ] **Step 2: 通过 HTTP 创建并读取任务**
+- [x] **Step 2: 通过 HTTP 创建并读取任务**
 
 ```powershell
 curl.exe -s -X POST http://127.0.0.1:8000/tasks -H "Content-Type: application/json" -d '{"title":"PostgreSQL API","priority":"high","due_date":"2026-09-30"}'
@@ -422,7 +422,7 @@ curl.exe -s http://127.0.0.1:8000/tasks
 
 预期：POST 为 201，GET 包含同一任务。
 
-- [ ] **Step 3: 用 psql 对账**
+- [x] **Step 3: 用 psql 对账**
 
 ```powershell
 docker exec study-postgres psql -U study -d study_tasks -c "SELECT id,title,status,priority,due_date FROM tasks ORDER BY id;"
@@ -430,15 +430,15 @@ docker exec study-postgres psql -U study -d study_tasks -c "SELECT id,title,stat
 
 预期：能查到 HTTP 创建的 `PostgreSQL API`，字段一致。
 
-- [ ] **Step 4: 运行错误端口故障实验**
+- [x] **Step 4: 运行错误端口故障实验**
 
 停止测试服务后，把 URL 端口临时改成 `55432` 并启动。记录异常类型和包含 `127.0.0.1:55432`、connection refused/连接失败的关键行；随后恢复正确 URL。不要提交错误 URL 或密码。
 
-- [ ] **Step 5: 最终验证**
+- [x] **Step 5: 最终验证**
 
 运行完整测试、`git diff --check`、`git status --short`；复核容器 `pg_isready` 和正确 URL 的 API GET。
 
-- [ ] **Step 6: 更新教学记录并提交**
+- [x] **Step 6: 更新教学记录并提交**
 
 记录 AI 实现、用户待完成的解释题、实际测试数量和故障实验归属。更新 `学习进度.md` 的当前任务为 W4-AI-05 待用户验收。
 
