@@ -84,6 +84,10 @@ docker compose down
 
 这些是 W5-02 的目标，尚需实际运行和你的解释后才记为验收通过。
 
-## w5-03
-连接失败时先查什么、再查什么；以及为什么 down 后任务还在:
-连接失败先查服务名是否 正确 再看端口 down后任务还在是因为数据卷被保留下来 重建容器后还能读取到原数据
+## W5-03 学习笔记
+
+连接失败时，先核对容器内使用的服务名能否解析，再检查目标端口是否有程序监听；若 TCP 已连通，再根据日志检查认证和 SQL 错误。`docker compose down` 会移除本项目的容器和网络，但没有加 `-v` 时会保留命名数据卷，因此重新创建容器后仍能读到任务。
+
+## W5-05 自动测试
+
+仓库根目录的 [GitHub Actions 工作流](../.github/workflows/study-task-assistant.yml) 在推送和拉取请求时安装 `requirements.txt`，然后从本目录运行 `python -m pytest -q`。这组测试使用临时 SQLite 文件，不需要真实密钥；只有设置了 `TEST_DATABASE_URL` 才会运行 PostgreSQL 集成测试。当前仓库尚未配置 Git 远端，因此需要连接 GitHub 仓库后才能看到线上工作流结果。本地用相同命令先验证测试。
