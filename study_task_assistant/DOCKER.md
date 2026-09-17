@@ -49,7 +49,21 @@ docker compose logs --tail=80 api
 docker compose exec db psql -U study -d study_tasks -c "SELECT version_num FROM alembic_version;"
 ```
 
-预期迁移版本是 `0002_users_and_owners`。若 API 容器不能连接数据库，先看 `db` 是否 healthy，再看 `api` 日志里的错误属于 DNS、TCP、账号密码还是迁移。不要在日志中打印 `DATABASE_URL` 或令牌。把 `DATABASE_URL` 中的 `db` 错写为 `127.0.0.1` 时，`api` 容器会尝试连接自己，因而无法连接数据库；练习完必须恢复。
+预期迁移版本是 `0002_users_and_owners`。若 API 容器不能连接数据库，先看 `db` 是否 healthy，再看 `api` 日志里的错误属于 DNS、TCP、账号密码还是迁移。不要在日志中打印 `DATABASE_URL` 或令牌。命令选项 `-U` 必须使用普通的 ASCII 短横线；`—U` 是长破折号，会被 `psql` 当成用户名的一部分。
+
+PostgreSQL 日志中首次初始化时的临时启动、关闭、再正式启动是正常过程；结合最终的 `database system is ready to accept connections` 和 `docker compose ps` 的 `healthy` 判断当前状态。API 日志中的 HTTP 401 表示请求已经到达应用，只是没有有效的登录令牌。
+
+### W5-03：不改配置的连接故障练习
+
+保持 Compose 环境运行，在项目目录执行下面三条命令。它们只从 `api` 容器发起 DNS 查询或 TCP 连接，不改数据库数据；前两条预期以非零状态退出。
+
+```powershell
+docker compose exec -T api python -c "import socket; socket.getaddrinfo('db-wrong', 5432)"
+docker compose exec -T api python -c "import socket; socket.create_connection(('db', 55432), timeout=3)"
+docker compose exec -T api python -c "import socket; s=socket.create_connection(('db', 5432), timeout=3); print('TCP connected to', s.getpeername()); s.close()"
+```
+
+观察第一条的域名解析错误、第二条的连接被拒绝和第三条成功建立 TCP 连接。用它们区分：服务名找不到（DNS）、服务名存在但目标端口没有程序监听（TCP）、正确地址和端口可连接。打印的容器 IP 由 Docker 分配，不要写死到配置中；应用连接数据库仍使用 `db:5432`。再与 `curl.exe -i http://127.0.0.1:8001/tasks` 的 401 对比：401 是 HTTP 层已经收到并处理请求后的响应。
 
 ```powershell
 docker compose restart api
@@ -57,7 +71,7 @@ docker compose ps
 docker compose down
 ```
 
-`restart api` 用于观察应用重启后数据是否仍在；`down` 停止并移除本套 Compose 的容器和网络，**保留**命名卷中的数据库数据。不要使用 `docker compose down -v`，它会删除本套环境的数据卷。现有 `study-postgres` 不属于本套 Compose 项目。
+`restart api` 只重启已有的 API 服务容器，可用于观察应用重启后数据是否仍在；`down` 停止并移除本套 Compose 的容器和网络，**保留**命名卷中的数据库数据。执行 `down` 后没有容器供 `restart` 重启；使用 `docker compose up -d --build` 重新创建并启动服务。不要使用 `docker compose down -v`，它会删除本套环境的数据卷。现有 `study-postgres` 不属于本套 Compose 项目。
 
 重启 `api` 后，等 `docker compose ps` 显示它正在运行，再重新登录并查询刚创建的任务，然后才执行 `down`。已创建数据卷后，不要只修改 `.env` 中的数据库密码：PostgreSQL 容器首次初始化时设置的旧密码仍在库中，新连接可能认证失败。
 
