@@ -122,3 +122,24 @@ def test_expired_token_and_short_secret_are_rejected(tmp_path):
         assert client.get(
             "/tasks", headers={"Authorization": f"Bearer {expired}"}
         ).status_code == 401
+
+
+def test_priority_filter_keeps_users_tasks_isolated(tmp_path):
+    with client_for(tmp_path) as client:
+        alice = register_and_login(client, "alice")
+        bob = register_and_login(client, "bob")
+        created = client.post(
+            "/tasks",
+            json={"title": "A 的任务", "priority": "high"},
+            headers=alice,
+        )
+        assert created.status_code == 201
+        task_id = created.json()["id"]
+        bob_list = client.get("/tasks?priority=high", headers=bob)
+        alice_list = client.get("/tasks?priority=high", headers=alice)
+        assert bob_list.status_code == 200
+        assert bob_list.json() == []
+        assert alice_list.status_code == 200
+        assert alice_list.json() == [created.json()]
+        assert client.get(f"/tasks/{task_id}", headers=bob).status_code == 404
+        assert client.get(f"/tasks/{task_id}", headers=alice).json() == created.json()
