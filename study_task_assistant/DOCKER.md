@@ -2,6 +2,20 @@
 
 这套环境使用单独的 `api`、`db` 容器和 `study-task-assistant-w5_postgres_data` 数据卷。它不使用现有 `study-postgres` 容器，也不读取其数据。Windows 访问 API 用 `127.0.0.1:8001`、访问新 PostgreSQL 用 `127.0.0.1:15432`；`api` 容器访问数据库用 `db:5432`。服务名解析和端口含义见 [Docker Compose 网络文档](https://docs.docker.com/compose/how-tos/networking/)。
 
+## 为什么有四个端口数字？
+
+`compose.yaml` 的 `ports` 按 `主机 IP:Windows 端口:容器内端口` 书写。这里有两个**不同程序**：Uvicorn 提供 HTTP API，PostgreSQL 提供数据库服务。
+
+```text
+Windows 浏览器/curl → 127.0.0.1:8001 → api 容器的 8000（HTTP）
+Windows psql/数据库客户端 → 127.0.0.1:15432 → db 容器的 5432（PostgreSQL）
+api 容器 → db:5432（同一 Compose 网络内直接访问数据库服务）
+```
+
+设置位置：[`compose.yaml`](compose.yaml) 的 `api.command` 用 `uvicorn ... --port 8000` 指定 API 容器内的监听端口；`api.ports` 把 Windows 的 `8001` 映射过去。`db` 使用的 `postgres:17` 镜像默认在容器内监听 `5432`；`db.ports` 把 Windows 的 `15432` 映射过去。`api.environment.DATABASE_URL` 中的 `@db:5432` 告诉应用向哪个数据库发起连接。`Dockerfile` 也有 Uvicorn 的默认 `CMD`，但当前 Compose 的 `command` 会覆盖它。`api.py` 定义的是应用和路由，不负责设置 Uvicorn 或 PostgreSQL 的监听端口。
+
+Docker Compose 是读取 `compose.yaml`、一次配置并管理多个容器的工具；`services` 是容器化的程序，Compose 会为它们建立网络，`volumes` 保存数据。**应用代码不连接 Docker 引擎**。这里使用 Docker 是为了在隔离、可复现的环境中同时运行 API 和 PostgreSQL，练习容器网络、环境变量与部署；任务助手也能不使用 Docker 运行，例如未设置 `DATABASE_URL` 时使用本地 SQLite。参阅 [Docker 官方 Compose 说明](https://docs.docker.com/compose/intro/compose-application-model/)。
+
 ## 第一次准备
 
 在 PowerShell 进入项目目录：
