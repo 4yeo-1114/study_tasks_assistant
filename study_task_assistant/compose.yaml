@@ -1,0 +1,35 @@
+name: study-task-assistant-w5
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: study
+      POSTGRES_PASSWORD: ${STUDY_POSTGRES_PASSWORD:?Set STUDY_POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: study_tasks
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:15432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U study -d study_tasks"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://study:${STUDY_POSTGRES_PASSWORD:?Set STUDY_POSTGRES_PASSWORD in .env}@db:5432/study_tasks
+      STUDY_TASK_SECRET_KEY: ${STUDY_TASK_SECRET_KEY:?Set STUDY_TASK_SECRET_KEY in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >-
+      sh -c "python -m alembic -c alembic.ini upgrade head &&
+      python -m uvicorn api:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "127.0.0.1:8001:8000"
+
+volumes:
+  postgres_data:
