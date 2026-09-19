@@ -3,6 +3,8 @@ import json
 import httpx
 import pytest
 
+import deepseek_demo
+from deepseek_demo import main, prompt_from_args
 from deepseek_api import (
     DeepSeekAPIError,
     DeepSeekConfigurationError,
@@ -168,3 +170,45 @@ def test_request_chat_requires_a_positive_timeout():
             ),
             timeout_seconds=0,
         )
+
+
+def test_prompt_from_args_uses_default_or_joins_arguments():
+    assert prompt_from_args([]) == "请用一句话解释 HTTP API 是什么"
+    assert prompt_from_args(["解释", "Bearer Token"]) == "解释 Bearer Token"
+
+
+def test_demo_prints_reply_and_usage_without_exposing_key(monkeypatch, capsys):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "secret-test-key")
+    monkeypatch.setenv("DEEPSEEK_MODEL", "test-model")
+    monkeypatch.setattr(
+        deepseek_demo,
+        "request_chat",
+        lambda *args, **kwargs: DeepSeekReply(
+            text="API 是程序之间的通信约定。",
+            model="test-model",
+            usage=DeepSeekUsage(
+                prompt_tokens=11,
+                completion_tokens=9,
+                total_tokens=20,
+            ),
+        ),
+    )
+
+    assert main(["解释", "API"]) == 0
+
+    captured = capsys.readouterr()
+    assert "模型: test-model" in captured.out
+    assert "API 是程序之间的通信约定。" in captured.out
+    assert "输入 11 / 输出 9 / 总计 20" in captured.out
+    assert "secret-test-key" not in captured.out
+    assert "secret-test-key" not in captured.err
+
+
+def test_demo_reports_missing_key_without_traceback(monkeypatch, capsys):
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+
+    assert main([]) == 1
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert "缺少环境变量 DEEPSEEK_API_KEY" in captured.err
