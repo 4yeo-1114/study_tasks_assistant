@@ -43,7 +43,7 @@
 - Consumes: existing `model_client.ModelMessage(role, content)`.
 - Produces: `DeepSeekSettings.from_env() -> DeepSeekSettings`, `DeepSeekUsage`, `DeepSeekReply`, `DeepSeekConfigurationError`, `DeepSeekAPIError`, `DeepSeekResponseError`, and `request_chat(messages, *, settings, timeout_seconds=30.0, transport=None) -> DeepSeekReply`.
 
-- [ ] **Step 1: Write failing configuration and request tests**
+- [x] **Step 1: Write failing configuration and request tests**
 
 Create tests that clear DeepSeek variables and expect `DeepSeekSettings.from_env()` to reject a missing key without exposing any credential. Add an `httpx.MockTransport` handler that asserts:
 
@@ -61,7 +61,7 @@ assert payload == {
 
 Return a fixed 200 response containing `choices[0].message.content`, `model`, and all three usage counts. Assert the parsed `DeepSeekReply`. Add a 401 response containing a provider error and assert `DeepSeekAPIError.status_code == 401` while `"test-key" not in str(error)`. Add a 200 response without `choices` and assert `DeepSeekResponseError` so malformed success responses cannot be mistaken for valid answers.
 
-- [ ] **Step 2: Run the focused tests and verify the red state**
+- [x] **Step 2: Run the focused tests and verify the red state**
 
 Run:
 
@@ -72,7 +72,7 @@ python -m pytest test_deepseek_api.py -q
 
 Expected: collection fails with `ModuleNotFoundError: No module named 'deepseek_api'`.
 
-- [ ] **Step 3: Implement the minimal request module**
+- [x] **Step 3: Implement the minimal request module**
 
 Implement immutable dataclasses with these exact fields:
 
@@ -98,7 +98,7 @@ class DeepSeekReply:
 
 `DeepSeekSettings.from_env()` reads `DEEPSEEK_API_KEY`, `DEEPSEEK_BASE_URL`, and `DEEPSEEK_MODEL`; it raises `DeepSeekConfigurationError("缺少环境变量 DEEPSEEK_API_KEY")` when the key is missing or blank. `request_chat` rejects non-positive timeouts, posts the exact payload asserted above, converts non-2xx responses to `DeepSeekAPIError(status_code, provider_message)`, and converts missing or wrongly typed success fields to `DeepSeekResponseError`. It returns `DeepSeekReply` only after validation. Accept optional `httpx.BaseTransport` only to support offline tests.
 
-- [ ] **Step 4: Correct dependencies and environment template**
+- [x] **Step 4: Correct dependencies and environment template**
 
 Replace:
 
@@ -120,7 +120,7 @@ DEEPSEEK_BASE_URL=https://api.deepseek.com
 DEEPSEEK_MODEL=deepseek-flash
 ```
 
-- [ ] **Step 5: Run focused and full tests**
+- [x] **Step 5: Run focused and full tests**
 
 Run:
 
@@ -131,7 +131,7 @@ python -m pytest -q
 
 Expected: the focused tests pass; the existing suite remains green with only the already documented PostgreSQL skip when `TEST_DATABASE_URL` is absent and the existing Starlette deprecation warning.
 
-- [ ] **Step 6: Commit the request contract**
+- [x] **Step 6: Commit the request contract**
 
 ```powershell
 git add -- study_task_assistant/deepseek_api.py study_task_assistant/test_deepseek_api.py study_task_assistant/requirements.txt study_task_assistant/.env.example
@@ -149,11 +149,11 @@ git commit -m "feat(agent): add DeepSeek chat API client"
 - Consumes: `DeepSeekSettings.from_env()` and `request_chat(...)` from Task 1.
 - Produces: `main(argv: Sequence[str] | None = None) -> int`, with exit code 0 on success and 1 for a configuration/API/network/response error.
 
-- [ ] **Step 1: Add failing tests for prompt selection and safe output**
+- [x] **Step 1: Add failing tests for prompt selection and safe output**
 
 Extract `prompt_from_args(argv)` so tests can assert that no argument uses `"请用一句话解释 HTTP API 是什么"` and multiple arguments join with spaces. Test `main()` by monkeypatching `request_chat` to return a fixed `DeepSeekReply`; assert output contains the model, reply, and `prompt/completion/total` token counts, and does not contain the test API key.
 
-- [ ] **Step 2: Run the demo-focused tests and verify failure**
+- [x] **Step 2: Run the demo-focused tests and verify failure**
 
 Run:
 
@@ -163,7 +163,7 @@ python -m pytest test_deepseek_api.py -q
 
 Expected: import or assertion failure because `deepseek_demo.py` does not exist.
 
-- [ ] **Step 3: Implement the demonstration CLI**
+- [x] **Step 3: Implement the demonstration CLI**
 
 Implement this data flow:
 
@@ -175,7 +175,7 @@ reply = request_chat(messages, settings=settings, timeout_seconds=30)
 
 Print only the selected model, final text, and usage counts. Catch the module's configuration/API/response exceptions plus `httpx.TimeoutException` and `httpx.RequestError`; print a short error to stderr and return 1. Never print `settings`, request headers, or the API key.
 
-- [ ] **Step 4: Run offline verification**
+- [x] **Step 4: Run offline verification**
 
 ```powershell
 python -m pytest test_deepseek_api.py -q
@@ -184,7 +184,7 @@ python -m py_compile deepseek_api.py deepseek_demo.py
 
 Expected: all focused tests pass and compilation exits 0. Do not perform the real API call because the user's key and paid balance are external state.
 
-- [ ] **Step 5: Commit the demo**
+- [x] **Step 5: Commit the demo**
 
 ```powershell
 git add -- study_task_assistant/deepseek_demo.py study_task_assistant/test_deepseek_api.py
@@ -203,11 +203,11 @@ git commit -m "feat(agent): add DeepSeek API learning demo"
 - Consumes: the approved design at `docs/superpowers/specs/2026-09-19-deepseek-api-w6-w7-design.md` and the runnable files from Tasks 1–2.
 - Produces: one consistent dynamic next action and evidence record; no runtime interface.
 
-- [ ] **Step 1: Rewrite the W6 and W7 schedule**
+- [x] **Step 1: Rewrite the W6 and W7 schedule**
 
 Replace the old `W6：最小工具型 Agent` section with W6-01 through W6-05 from the approved design: real request, `httpx`/errors, multi-round usage, SSE streaming, and client engineering. Replace the old RAG-centered W7 section with W7-01 through W7-05: tool call, read-only task tools, Agent loop, confirmed writes, and reliability/evaluation. State that RAG moves to W8 and that the Fake Client remains only for offline tests.
 
-- [ ] **Step 2: Update the progress source of truth**
+- [x] **Step 2: Update the progress source of truth**
 
 Change the current stage to real DeepSeek API learning. Keep the Fake Client implementation evidence but mark its user execution/understanding unverified. Add a new W6-API-01 row in progress with AI scaffold status and no user mastery claim. Set the next action to:
 
@@ -224,11 +224,11 @@ python -m pytest test_deepseek_api.py -q
 
 Ask the learner to share only redacted output and answer where the URL, Authorization header, request messages, response text, and usage counts occur.
 
-- [ ] **Step 3: Record the implementation session**
+- [x] **Step 3: Record the implementation session**
 
 Create `学习记录/2026-09-19-02.md` with AI contribution level H4, exact offline test commands and results, no claimed real API success, and the remaining user evidence: local key setup, one real call, output explanation, and one later parameter variation.
 
-- [ ] **Step 4: Verify consistency and secret hygiene**
+- [x] **Step 4: Verify consistency and secret hygiene**
 
 Run:
 
@@ -241,7 +241,7 @@ git diff --check -- w5总结-w6-w7计划.md 学习进度.md 学习记录/2026-09
 
 Expected: the first search finds no stale curriculum text; the key-shaped search finds no result; the environment-variable search shows only placeholders or command syntax, never a real value; diff check exits 0.
 
-- [ ] **Step 5: Run final project verification**
+- [x] **Step 5: Run final project verification**
 
 ```powershell
 cd D:\dev-learning\study_task_assistant
@@ -253,7 +253,7 @@ git diff --check
 
 Expected: all tests pass except the documented environment-dependent skip; compilation and diff check exit 0.
 
-- [ ] **Step 6: Commit only curriculum and learning records**
+- [x] **Step 6: Commit only curriculum and learning records**
 
 ```powershell
 git add -- w5总结-w6-w7计划.md 学习进度.md 学习记录/2026-09-19-02.md
