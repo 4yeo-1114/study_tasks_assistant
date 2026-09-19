@@ -7,3 +7,4 @@ study_task_assistant/tasks.json
 *.dump
 .env
 study_task_assistant/.env
+.worktrees/
