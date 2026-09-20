@@ -13,6 +13,7 @@ from model_client import ModelMessage
 
 def main() -> int:
     received_content = False
+    chunk_count = 0
     try:
         for chunk in stream_chat(
             [
@@ -25,6 +26,7 @@ def main() -> int:
         ):
             print(chunk, end="", flush=True)
             received_content = True
+            chunk_count += 1
     except (
         DeepSeekConfigurationError,
         DeepSeekAPIError,
@@ -38,6 +40,7 @@ def main() -> int:
 
     print()
     print("流式响应完成")
+    print(f"content chunk 数量: {chunk_count}")
     return 0
 
 
