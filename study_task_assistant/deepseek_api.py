@@ -1,4 +1,6 @@
+import json
 import os
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Sequence
 
@@ -105,15 +107,7 @@ def request_chat(
 
     # 非 2xx：先尝试读取服务端的 JSON 错误信息。
     if not response.is_success:
-        try:
-            data = _response_json(response)
-            message = _provider_error_message(data).replace(
-                settings.api_key,
-                "[REDACTED]",
-            )
-        except DeepSeekResponseError:
-            message = "错误响应不是合法 JSON"
-        raise DeepSeekAPIError(response.status_code, message)
+        _raise_api_error(response, api_key=settings.api_key)
 
     # 2xx：成功响应必须符合 DeepSeek 的 JSON 响应结构。
     data = _response_json(response)
@@ -146,6 +140,88 @@ def request_chat(
     )
 
 
+def stream_chat(
+    messages: Sequence[ModelMessage],
+    *,
+    settings: DeepSeekSettings,
+    timeout_seconds: float = 30.0,
+    transport: httpx.BaseTransport | None = None,
+) -> Iterator[str]:
+    """Yield user-visible text chunks from DeepSeek's SSE response."""
+    if timeout_seconds <= 0:
+        raise ValueError("timeout_seconds 必须大于 0")
+
+    payload = {
+        "model": settings.model,
+        "messages": [
+            {"role": message.role, "content": message.content}
+            for message in messages
+        ],
+        "stream": True,
+    }
+    headers = {
+        "Authorization": f"Bearer {settings.api_key}",
+        "Accept": "text/event-stream",
+    }
+
+    try:
+        with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
+            with client.stream(
+                "POST",
+                f"{settings.base_url}/chat/completions",
+                headers=headers,
+                json=payload,
+            ) as response:
+                if not response.is_success:
+                    response.read()
+                    _raise_api_error(response, api_key=settings.api_key)
+
+                for line in response.iter_lines():
+                    if not line or line.startswith(":"):
+                        continue
+                    if not line.startswith("data:"):
+                        raise DeepSeekResponseError("DeepSeek SSE 事件格式不合法")
+
+                    event_text = line.removeprefix("data:").strip()
+                    if event_text == "[DONE]":
+                        return
+
+                    try:
+                        event = json.loads(event_text)
+                    except json.JSONDecodeError as exc:
+                        raise DeepSeekResponseError(
+                            "DeepSeek SSE 事件不是合法 JSON"
+                        ) from exc
+
+                    try:
+                        delta = event["choices"][0]["delta"]
+                    except (KeyError, IndexError, TypeError) as exc:
+                        raise DeepSeekResponseError(
+                            "DeepSeek SSE 响应结构不完整"
+                        ) from exc
+
+                    if not isinstance(delta, dict):
+                        raise DeepSeekResponseError(
+                            "DeepSeek SSE 响应结构不完整"
+                        )
+                    content = delta.get("content")
+                    if content is None or content == "":
+                        continue
+                    if not isinstance(content, str):
+                        raise DeepSeekResponseError(
+                            "DeepSeek SSE 响应结构不完整"
+                        )
+                    yield content
+
+                raise DeepSeekResponseError(
+                    "DeepSeek 流在 [DONE] 前结束，已接收内容不完整"
+                )
+    except httpx.TimeoutException as exc:
+        raise DeepSeekTimeoutError("DeepSeek 流式响应超时") from exc
+    except httpx.RequestError as exc:
+        raise DeepSeekNetworkError("DeepSeek 流式连接中断") from exc
+
+
 def _response_json(response: httpx.Response) -> dict[str, object]:
     try:
         data = response.json()
@@ -163,3 +239,12 @@ def _provider_error_message(data: dict[str, object]) -> str:
         if isinstance(message, str) and message:
             return message
     return "未提供错误详情"
+
+
+def _raise_api_error(response: httpx.Response, *, api_key: str) -> None:
+    try:
+        data = _response_json(response)
+        message = _provider_error_message(data).replace(api_key, "[REDACTED]")
+    except DeepSeekResponseError:
+        message = "错误响应不是合法 JSON"
+    raise DeepSeekAPIError(response.status_code, message)
