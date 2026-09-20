@@ -10,6 +10,7 @@ from deepseek_api import (
     request_chat,
     stream_chat,
 )
+
 from model_client import ModelMessage
 
 
@@ -33,7 +34,7 @@ class DeepSeekClient:
         self._transport = transport
 
     def chat(self, messages: Sequence[ModelMessage]) -> DeepSeekReply:
-        request_id = self._start_request("chat")
+        request_id = self._start_request("chat", len(messages))
         try:
             reply = request_chat(
                 messages,
@@ -49,7 +50,7 @@ class DeepSeekClient:
         return reply
 
     def stream(self, messages: Sequence[ModelMessage]) -> Iterator[str]:
-        request_id = self._start_request("stream")
+        request_id = self._start_request("stream", len(messages))
         try:
             yield from stream_chat(
                 messages,
@@ -63,13 +64,15 @@ class DeepSeekClient:
 
         self._log_success(request_id, "stream")
 
-    def _start_request(self, mode: str) -> str:
+    def _start_request(self, mode: str, message_count: int) -> str:
         request_id = uuid.uuid4().hex
         logger.info(
-            "deepseek_request request_id=%s mode=%s model=%s status=started",
+            "deepseek_request request_id=%s mode=%s model=%s "
+            "status=started message_count=%d",
             request_id,
             mode,
             self._settings.model,
+            message_count,
         )
         return request_id
 

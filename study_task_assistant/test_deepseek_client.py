@@ -81,6 +81,7 @@ def test_client_logs_metadata_without_secrets_or_prompt(caplog) -> None:
     assert "mode=chat" in caplog.text
     assert "status=succeeded" in caplog.text
     assert "request_id=" in caplog.text
+    assert "message_count=1" in caplog.text
     assert SETTINGS.api_key not in caplog.text
     assert MESSAGES[0].content not in caplog.text
 
