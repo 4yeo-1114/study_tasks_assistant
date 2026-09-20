@@ -1,9 +1,10 @@
 import json
 
 import httpx
+import pytest
 
 from deepseek_api import DeepSeekSettings
-from deepseek_multi_turn_demo import run_two_turn_chat
+from deepseek_multi_turn_demo import run_two_turn_chat, trim_messages
 from model_client import ModelMessage
 
 
@@ -69,3 +70,38 @@ def test_second_request_resends_first_question_and_answer():
     )
     assert result.first_reply.usage.prompt_tokens == 12
     assert result.second_reply.usage.prompt_tokens == 30
+
+
+def test_trim_messages_keeps_system_and_last_two_regular_messages():
+    messages = [
+        ModelMessage(role="system", content="你是学习助手"),
+        ModelMessage(role="user", content="问题一"),
+        ModelMessage(role="assistant", content="回答一"),
+        ModelMessage(role="user", content="问题二"),
+        ModelMessage(role="assistant", content="回答二"),
+    ]
+
+    assert trim_messages(messages, max_non_system_messages=2) == [
+        ModelMessage(role="system", content="你是学习助手"),
+        ModelMessage(role="user", content="问题二"),
+        ModelMessage(role="assistant", content="回答二"),
+    ]
+    assert len(messages) == 5
+
+
+def test_trim_messages_without_system_keeps_last_two_messages():
+    messages = [
+        ModelMessage(role="user", content="问题一"),
+        ModelMessage(role="assistant", content="回答一"),
+        ModelMessage(role="user", content="问题二"),
+    ]
+
+    assert trim_messages(messages, max_non_system_messages=2) == [
+        ModelMessage(role="assistant", content="回答一"),
+        ModelMessage(role="user", content="问题二"),
+    ]
+
+
+def test_trim_messages_rejects_non_positive_limit():
+    with pytest.raises(ValueError, match="必须大于 0"):
+        trim_messages([], max_non_system_messages=0)

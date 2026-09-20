@@ -1,4 +1,5 @@
 import sys
+from collections.abc import Sequence
 from dataclasses import dataclass
 
 import httpx
@@ -57,6 +58,21 @@ def run_two_turn_chat(
         second_reply=second_reply,
         messages=tuple(messages),
     )
+
+def trim_messages(
+    messages: Sequence[ModelMessage],
+    *,
+    max_non_system_messages: int,
+) -> list[ModelMessage]:
+    if max_non_system_messages <= 0:
+        raise ValueError("max_non_system_messages 必须大于 0")
+
+    if not messages:
+        return []
+
+    if messages[0].role == "system":
+        return [messages[0], *messages[1:][-max_non_system_messages:]]
+    return list(messages[-max_non_system_messages:])
 
 
 def _print_reply(round_number: int, reply: DeepSeekReply) -> None:
