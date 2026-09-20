@@ -1,11 +1,10 @@
 import sys
 from collections.abc import Sequence
 
-import httpx
-
 from deepseek_api import (
     DeepSeekAPIError,
     DeepSeekConfigurationError,
+    DeepSeekNetworkError,
     DeepSeekResponseError,
     DeepSeekSettings,
     request_chat,
@@ -34,9 +33,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     except (
         DeepSeekConfigurationError,
         DeepSeekAPIError,
+        DeepSeekNetworkError,
         DeepSeekResponseError,
-        httpx.TimeoutException,
-        httpx.RequestError,
     ) as exc:
         print(f"调用失败: {exc}", file=sys.stderr)
         return 1

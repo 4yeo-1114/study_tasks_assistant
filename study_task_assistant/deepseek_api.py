@@ -14,7 +14,16 @@ class DeepSeekConfigurationError(ValueError):
 class DeepSeekAPIError(RuntimeError):
     def __init__(self, status_code: int, provider_message: str) -> None:
         self.status_code = status_code
+        self.retryable = status_code == 429 or 500 <= status_code <= 599
         super().__init__(f"DeepSeek API 返回 HTTP {status_code}: {provider_message}")
+
+
+class DeepSeekNetworkError(RuntimeError):
+    pass
+
+
+class DeepSeekTimeoutError(DeepSeekNetworkError):
+    pass
 
 
 class DeepSeekResponseError(RuntimeError):
@@ -82,12 +91,17 @@ def request_chat(
     }
     headers = {"Authorization": f"Bearer {settings.api_key}"}
 
-    with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
-        response = client.post(
-            f"{settings.base_url}/chat/completions",
-            headers=headers,
-            json=payload,
-        )
+    try:
+        with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
+            response = client.post(
+                f"{settings.base_url}/chat/completions",
+                headers=headers,
+                json=payload,
+            )
+    except httpx.TimeoutException as exc:
+        raise DeepSeekTimeoutError("DeepSeek 请求超时") from exc
+    except httpx.RequestError as exc:
+        raise DeepSeekNetworkError("无法连接 DeepSeek") from exc
 
     data = _response_json(response)
     if not response.is_success:

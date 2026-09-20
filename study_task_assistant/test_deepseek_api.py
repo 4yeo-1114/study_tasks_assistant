@@ -8,9 +8,11 @@ from deepseek_demo import main, prompt_from_args
 from deepseek_api import (
     DeepSeekAPIError,
     DeepSeekConfigurationError,
+    DeepSeekNetworkError,
     DeepSeekReply,
     DeepSeekResponseError,
     DeepSeekSettings,
+    DeepSeekTimeoutError,
     DeepSeekUsage,
     request_chat,
 )
@@ -128,6 +130,7 @@ def test_request_chat_turns_http_error_into_safe_api_error():
         )
 
     assert caught.value.status_code == 401
+    assert caught.value.retryable is False
     assert "Authentication Fails" in str(caught.value)
     assert "test-key" not in str(caught.value)
 
@@ -169,6 +172,88 @@ def test_request_chat_requires_a_positive_timeout():
                 model="test-model",
             ),
             timeout_seconds=0,
+        )
+
+
+@pytest.mark.parametrize("status_code", [429, 503])
+def test_request_chat_marks_temporary_http_errors_retryable(status_code):
+    transport = httpx.MockTransport(
+        lambda _: httpx.Response(
+            status_code,
+            json={"error": {"message": "temporary failure"}},
+        )
+    )
+
+    with pytest.raises(DeepSeekAPIError) as caught:
+        request_chat(
+            [ModelMessage(role="user", content="hello")],
+            settings=DeepSeekSettings(
+                api_key="test-key",
+                base_url="https://api.deepseek.com",
+                model="test-model",
+            ),
+            transport=transport,
+        )
+
+    assert caught.value.status_code == status_code
+    assert caught.value.retryable is True
+
+
+def test_request_chat_wraps_read_timeout_as_model_timeout():
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout("upstream stalled", request=request)
+
+    with pytest.raises(DeepSeekTimeoutError, match="DeepSeek 请求超时") as caught:
+        request_chat(
+            [ModelMessage(role="user", content="hello")],
+            settings=DeepSeekSettings(
+                api_key="test-key",
+                base_url="https://api.deepseek.com",
+                model="test-model",
+            ),
+            transport=httpx.MockTransport(handler),
+        )
+
+    assert "test-key" not in str(caught.value)
+
+
+def test_request_chat_wraps_connection_failure_as_network_error():
+    def handler(request: httpx.Request) -> httpx.Response:
+        raise httpx.ConnectError("DNS failed", request=request)
+
+    with pytest.raises(DeepSeekNetworkError, match="无法连接 DeepSeek") as caught:
+        request_chat(
+            [ModelMessage(role="user", content="hello")],
+            settings=DeepSeekSettings(
+                api_key="test-key",
+                base_url="https://api.deepseek.com",
+                model="test-model",
+            ),
+            transport=httpx.MockTransport(handler),
+        )
+
+    assert not isinstance(caught.value, DeepSeekTimeoutError)
+    assert "test-key" not in str(caught.value)
+
+
+def test_request_chat_rejects_non_json_success_response():
+    transport = httpx.MockTransport(
+        lambda _: httpx.Response(
+            200,
+            text="<html>not json</html>",
+            headers={"content-type": "text/html"},
+        )
+    )
+
+    with pytest.raises(DeepSeekResponseError, match="不是合法 JSON"):
+        request_chat(
+            [ModelMessage(role="user", content="hello")],
+            settings=DeepSeekSettings(
+                api_key="test-key",
+                base_url="https://api.deepseek.com",
+                model="test-model",
+            ),
+            transport=transport,
         )
 
 
