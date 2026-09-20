@@ -103,14 +103,20 @@ def request_chat(
     except httpx.RequestError as exc:
         raise DeepSeekNetworkError("无法连接 DeepSeek") from exc
 
-    data = _response_json(response)
+    # 非 2xx：先尝试读取服务端的 JSON 错误信息。
     if not response.is_success:
-        message = _provider_error_message(data).replace(
-            settings.api_key,
-            "[REDACTED]",
-        )
+        try:
+            data = _response_json(response)
+            message = _provider_error_message(data).replace(
+                settings.api_key,
+                "[REDACTED]",
+            )
+        except DeepSeekResponseError:
+            message = "错误响应不是合法 JSON"
         raise DeepSeekAPIError(response.status_code, message)
 
+    # 2xx：成功响应必须符合 DeepSeek 的 JSON 响应结构。
+    data = _response_json(response)
     try:
         text = data["choices"][0]["message"]["content"]
         model = data["model"]
@@ -136,7 +142,7 @@ def request_chat(
             prompt_tokens=prompt_tokens,
             completion_tokens=completion_tokens,
             total_tokens=total_tokens,
-        ),
+        )
     )
 
 

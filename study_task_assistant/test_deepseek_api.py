@@ -297,3 +297,24 @@ def test_demo_reports_missing_key_without_traceback(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert captured.out == ""
     assert "缺少环境变量 DEEPSEEK_API_KEY" in captured.err
+
+
+def test_request_chat_classifies_non_json_502_as_retryable_api_error():
+    transport = httpx.MockTransport(
+        lambda _: httpx.Response(502, text="Bad Gateway")
+    )
+
+    with pytest.raises(DeepSeekAPIError) as caught:
+        request_chat(
+            [ModelMessage(role="user", content="hello")],
+            settings=DeepSeekSettings(
+                api_key="test-key",
+                base_url="https://api.deepseek.com",
+                model="test-model",
+            ),
+            transport=transport,
+        )
+
+    assert caught.value.status_code == 502
+    assert caught.value.retryable is True
+    assert "test-key" not in str(caught.value)
