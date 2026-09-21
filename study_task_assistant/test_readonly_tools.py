@@ -110,3 +110,23 @@ def test_unknown_tool_is_not_called() -> None:
 
     assert service.list_calls == []
     assert service.get_calls == []
+
+
+def test_list_tasks_supports_status_only_filter() -> None:
+    service = FakeTaskQueryService()
+    call = ToolCallProposal(
+        call_id="call-completed",
+        name="list_tasks",
+        arguments={"status": "completed"},
+    )
+
+    result = execute_readonly_tool(
+        call,
+        user_id=1,
+        service=service,
+    )
+
+    assert service.list_calls == [(1, "completed", None)]
+    assert result.call_id == "call-completed"
+    assert result.name == "list_tasks"
+    assert result.output == service.tasks_by_user[1]
