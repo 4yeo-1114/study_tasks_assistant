@@ -49,7 +49,7 @@ def test_loop_sends_assistant_call_and_matching_tool_result():
     def handler(request):
         body = json.loads(request.content)
         requests.append(body)
-        assert body["tool_choice"] == "auto"
+        assert body["tool_choice"] == ("required" if len(requests) == 1 else "auto")
         assert body["thinking"] == {"type": "disabled"}
         if len(requests) == 1:
             assert body["messages"] == [{"role": "user", "content": "查待完成任务"}]

@@ -67,7 +67,7 @@ def run_readonly_agent(
                         "model": settings.model,
                         "messages": messages,
                         "tools": READ_ONLY_TOOLS,
-                        "tool_choice": "auto",
+                        "tool_choice": "required" if step == 1 else "auto",
                         "thinking": {"type": "disabled"},
                         "stream": False,
                     },
