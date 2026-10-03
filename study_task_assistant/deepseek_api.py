@@ -240,7 +240,7 @@ def _provider_error_message(data: dict[str, object]) -> str:
             return message
     return "未提供错误详情"
 
-
+#把错误响应包装为报错信息
 def _raise_api_error(response: httpx.Response, *, api_key: str) -> None:
     try:
         data = _response_json(response)

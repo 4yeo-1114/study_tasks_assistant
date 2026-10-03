@@ -4,6 +4,7 @@ from typing import Annotated, Protocol
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from deepseek_tools import LIST_TASKS_TOOL, ToolCallProposal
+
 from schemas import TaskPriority, TaskStatus
 
 
@@ -39,6 +40,7 @@ class ToolArgumentsError(ValueError):
 
 
 class ListTasksArguments(BaseModel):
+
     model_config = ConfigDict(extra="forbid")
 
     status: TaskStatus | None = None
@@ -47,6 +49,7 @@ class ListTasksArguments(BaseModel):
 
 class GetTaskArguments(BaseModel):
     model_config = ConfigDict(extra="forbid")
+
 
     task_id: Annotated[int, Field(strict=True, ge=1)]
 

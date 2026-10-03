@@ -5,7 +5,8 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY api.py auth.py database.py models.py repository.py schemas.py service.py ./
+COPY *.py ./
+COPY frontend ./frontend
 COPY alembic.ini ./
 COPY migrations ./migrations
 

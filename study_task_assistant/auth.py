@@ -42,6 +42,7 @@ class AuthService:
             algorithm="HS256",
         )
 
+
     def user_id_for_token(self, token: str) -> int | None:
         try:
             payload = jwt.decode(

@@ -2,7 +2,7 @@ name: study-task-assistant-w5
 
 services:
   db:
-    image: postgres:17
+    image: pgvector/pgvector:pg17
     environment:
       POSTGRES_USER: study
       POSTGRES_PASSWORD: ${STUDY_POSTGRES_PASSWORD:?Set STUDY_POSTGRES_PASSWORD in .env}
@@ -22,6 +22,14 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://study:${STUDY_POSTGRES_PASSWORD:?Set STUDY_POSTGRES_PASSWORD in .env}@db:5432/study_tasks
       STUDY_TASK_SECRET_KEY: ${STUDY_TASK_SECRET_KEY:?Set STUDY_TASK_SECRET_KEY in .env}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      AGENT_RAG_ENABLED: "1"
+      EMBEDDING_MODEL: BAAI/bge-small-zh-v1.5
+      EMBEDDING_DIMENSION: "512"
+      EMBEDDING_THREADS: "1"
+      EMBEDDING_CACHE_DIR: /app/.cache/fastembed
+    volumes:
+      - fastembed_cache:/app/.cache/fastembed
     depends_on:
       db:
         condition: service_healthy
@@ -33,3 +41,4 @@ services:
 
 volumes:
   postgres_data:
+  fastembed_cache:

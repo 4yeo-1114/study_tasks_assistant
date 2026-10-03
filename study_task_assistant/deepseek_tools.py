@@ -1,4 +1,6 @@
 import json
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Sequence
 
@@ -13,6 +15,7 @@ from deepseek_api import (
     DeepSeekUsage,
 )
 from model_client import ModelMessage
+from reliability import RetryPolicy, call_with_retry
 
 
 LIST_TASKS_TOOL: dict[str, object] = {
@@ -66,10 +69,13 @@ def request_tool_proposal(
     settings: DeepSeekSettings,
     timeout_seconds: float = 30.0,
     transport: httpx.BaseTransport | None = None,
+    retry_policy: RetryPolicy | None = None,
+    sleeper: Callable[[float], object] = time.sleep,
 ) -> ToolProposal:
     if timeout_seconds <= 0:
         raise ValueError("timeout_seconds 必须大于 0")
 
+    #校验工具函数是否合法以及返回工具名
     allowed_names = _tool_names(tools)
     payload = {
         "model": settings.model,
@@ -84,21 +90,31 @@ def request_tool_proposal(
     }
     headers = {"Authorization": f"Bearer {settings.api_key}"}
 
-    try:
-        with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
-            response = client.post(
-                f"{settings.base_url}/chat/completions",
-                headers=headers,
-                json=payload,
-            )
-    except httpx.TimeoutException as exc:
-        raise DeepSeekTimeoutError("DeepSeek 工具提案请求超时") from exc
-    except httpx.RequestError as exc:
-        raise DeepSeekNetworkError("无法连接 DeepSeek 获取工具提案") from exc
+    with httpx.Client(timeout=timeout_seconds, transport=transport) as client:
+        def send_model_request() -> httpx.Response:
+            try:
+                response = client.post(
+                    f"{settings.base_url}/chat/completions",
+                    headers=headers,
+                    json=payload,
+                )
+            except httpx.TimeoutException as exc:
+                raise DeepSeekTimeoutError("DeepSeek 工具提案请求超时") from exc
+            except httpx.RequestError as exc:
+                raise DeepSeekNetworkError("无法连接 DeepSeek 获取工具提案") from exc
 
-    if not response.is_success:
-        message = _safe_error_message(response, api_key=settings.api_key)
-        raise DeepSeekAPIError(response.status_code, message)
+            #非2xx 解析错误响应然后raise error
+            if not response.is_success:
+                message = _safe_error_message(response, api_key=settings.api_key)
+                raise DeepSeekAPIError(response.status_code, message)
+            return response
+
+        response = call_with_retry(
+            send_model_request,
+            operation="model_request",
+            policy=retry_policy,
+            sleeper=sleeper,
+        )
 
     data = _response_object(response)
     try:

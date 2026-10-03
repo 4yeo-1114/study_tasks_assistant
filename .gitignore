@@ -8,3 +8,43 @@ study_task_assistant/tasks.json
 .env
 study_task_assistant/.env
 .worktrees/
+
+# Local secrets and runtime state
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+.env
+**/.env
+!.env.example
+!.env.compose.example
+
+# Local Python/build/editor artifacts
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.vscode/
+.idea/
+
+# Learning-only material (kept locally, excluded from the public repository)
+学习记录/
+学习进度.md
+Agent开发实习学习与求职计划_2026.md
+数据库_Engine_Session_ORM与事务笔记.md
+W9-W11详细学习计划.md
+w3-w4总结.md
+w5总结-w6-w7计划.md
+w6总结-w7-w8计划.md
+w8总结.md
+w10总结.md
+AGENTS.md
+rag.patch
+docs/superpowers/
+
+# Archived teaching scripts
+study_task_assistant/examples/
+study_task_assistant/main.py
+tests/test_agent_loop_demo.py
+tests/test_multi_turn.py
+tests/test_task_proposal_demo.py

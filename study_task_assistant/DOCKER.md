@@ -40,6 +40,12 @@ docker compose logs --tail=80 api
 
 浏览器打开 `http://127.0.0.1:8001/docs`。先注册一个新账号，再登录并通过 Authorize 填入访问令牌；创建任务并查询列表。也可以先执行 `curl.exe -i http://127.0.0.1:8001/tasks`，未登录预期得到 401，而不是连接失败。新数据库不会有旧 `study-postgres` 的任务。
 
+如果不使用 Compose，而是在仓库根目录启动本地 SQLite API，必须告诉 Uvicorn `api.py` 所在目录：
+
+```powershell
+..\.venv\Scripts\python.exe -m uvicorn --app-dir study_task_assistant api:app --reload
+```
+
 ## 观察与排错
 
 ```powershell
@@ -49,7 +55,7 @@ docker compose logs --tail=80 api
 docker compose exec db psql -U study -d study_tasks -c "SELECT version_num FROM alembic_version;"
 ```
 
-预期迁移版本是 `0002_users_and_owners`。若 API 容器不能连接数据库，先看 `db` 是否 healthy，再看 `api` 日志里的错误属于 DNS、TCP、账号密码还是迁移。不要在日志中打印 `DATABASE_URL` 或令牌。命令选项 `-U` 必须使用普通的 ASCII 短横线；`—U` 是长破折号，会被 `psql` 当成用户名的一部分。
+当前预期迁移版本是 `0008_task_proposal_idempotency`。若 API 容器不能连接数据库，先看 `db` 是否 healthy，再看 `api` 日志里的错误属于 DNS、TCP、账号密码还是迁移。不要在日志中打印 `DATABASE_URL` 或令牌。命令选项 `-U` 必须使用普通的 ASCII 短横线；`—U` 是长破折号，会被 `psql` 当成用户名的一部分。
 
 PostgreSQL 日志中首次初始化时的临时启动、关闭、再正式启动是正常过程；结合最终的 `database system is ready to accept connections` 和 `docker compose ps` 的 `healthy` 判断当前状态。API 日志中的 HTTP 401 表示请求已经到达应用，只是没有有效的登录令牌。
 
@@ -79,7 +85,7 @@ docker compose down
 
 1. `docker compose ps` 显示 `db` healthy、`api` running。
 2. `/docs` 可打开；未登录 `GET /tasks` 返回 401；注册、登录、创建和查询任务成功。
-3. `alembic_version` 为 `0002_users_and_owners`；重启 `api` 后能重新登录并查到任务。
+3. `alembic_version` 为当前版本 `0008_task_proposal_idempotency`；重启 `api` 后能重新登录并查到任务。
 4. 能解释 `127.0.0.1:15432` 与 `db:5432` 各从哪里访问；如果只改主机发布端口，容器间的 `db:5432` 不变。
 
 这些是 W5-02 的目标，尚需实际运行和你的解释后才记为验收通过。
@@ -91,3 +97,33 @@ docker compose down
 ## W5-05 自动测试
 
 仓库根目录的 [GitHub Actions 工作流](../.github/workflows/study-task-assistant.yml) 在推送和拉取请求时安装 `requirements.txt`，然后从本目录运行 `python -m pytest -q`。这组测试使用临时 SQLite 文件，不需要真实密钥；只有设置了 `TEST_DATABASE_URL` 才会运行 PostgreSQL 集成测试。当前仓库尚未配置 Git 远端，因此需要连接 GitHub 仓库后才能看到线上工作流结果。本地用相同命令先验证测试。
+
+## W10 Agent 与 RAG 运行时
+
+Compose 默认设置 `AGENT_RAG_ENABLED=1`，因此认证后的 `POST /agent/chat` 可以使用 `search_knowledge`。生产链路是：JWT 得到可信 `owner_id`，关键词和 pgvector 两侧都在 SQL 阶段筛选该用户且处于 `ready/active` 的分块，RRF 融合后作为 tool message 回传给 DeepSeek。
+
+FastEmbed 模型在第一次知识检索时延迟加载，向量维度必须等于 `EMBEDDING_DIMENSION=512`。模型文件保存在 `fastembed_cache` 命名卷中，重建 API 容器不会重复下载。若 PostgreSQL/pgvector 不可用、模型名或维度不匹配，`/agent/chat` 返回 503；DeepSeek 上游请求失败返回 502。
+
+认证用户可以通过 `POST /documents` 上传纯文本资料。相同 `source` 使用新的 `document_version` 表示重建；相同版本和相同内容重复请求是幂等操作，相同版本但内容不同返回 409。`GET /documents`、`GET /documents/{document_id}` 和 `DELETE /documents/{document_id}` 都使用 JWT 中的 owner_id，不接受客户端提供 owner_id。
+
+```json
+{
+  "source": "agent-notes.md",
+  "content": "Agent 工具调用必须使用服务端身份做权限过滤。",
+  "document_version": "v1",
+  "chunk_size": 500,
+  "overlap": 50
+}
+```
+
+上传成功后文档状态为 `ready`，即可通过 `/agent/chat` 的 `search_knowledge` 检索。删除会在一个事务中标记生命周期状态并删除对应版本的向量 chunks。
+
+### 结构化日志
+
+API 响应包含服务器生成的 `X-Request-ID`。使用该值可以在容器日志中关联 HTTP、Agent、模型请求和知识检索事件：
+
+```powershell
+docker compose logs --no-color api | Select-String "这里替换为X-Request-ID"
+```
+
+日志是单行 JSON 元数据，包含 `agent_run_id`、step、tool_call_id、duration_ms、candidate_count、token 和状态。日志不会记录 JWT、API Key、问题正文、工具参数或文档内容。可用 `STUDY_TASK_LOG_LEVEL` 调整 `study_task.*` 日志级别，默认是 `INFO`。

@@ -1,0 +1,88 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
+import pytest
+
+from document_ingestion import IngestionConfig, ingest_document
+from document_lifecycle import DocumentLifecycle, DocumentState
+from models import Base
+from rag import DocumentChunk
+
+
+class Model:
+    def __init__(self, fail=False):
+        self.fail = fail
+        self.calls = 0
+
+    def encode(self, text):
+        self.calls += 1
+        if self.fail and self.calls == 2:
+            raise RuntimeError("embedding failed")
+        return [1.0, 0.0]
+
+
+class Store:
+    def __init__(self):
+        self.deleted = []
+        self.inserted = []
+
+    def delete_document(self, session, *, owner_id, source):
+        self.deleted.append((owner_id, source))
+        return 0
+
+    def delete_document_version(self, session, *, owner_id, source, document_version):
+        self.deleted.append((owner_id, source, document_version))
+        return 0
+
+    def insert_chunk(self, session, *, owner_id, chunk, vector, document_version):
+        self.inserted.append((owner_id, chunk, document_version))
+
+
+def setup():
+    engine = create_engine("sqlite+pysqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    sessions = lambda: Session(engine, expire_on_commit=False)
+    return engine, sessions, DocumentLifecycle(sessions), Store()
+
+
+def test_failed_new_ingestion_keeps_previous_active_version():
+    engine, sessions, lifecycle, store = setup()
+    ingest_document(
+        sessions,
+        store,
+        Model(),
+        owner_id=1,
+        source="guide.md",
+        text="old document",
+        config=IngestionConfig(chunk_size=5, overlap=0, document_version="v1"),
+        lifecycle=lifecycle,
+    )
+
+    with pytest.raises(RuntimeError, match="embedding failed"):
+        ingest_document(
+            sessions,
+            store,
+            Model(fail=True),
+            owner_id=1,
+            source="guide.md",
+            text="new document content",
+            config=IngestionConfig(chunk_size=5, overlap=0, document_version="v2"),
+            lifecycle=lifecycle,
+        )
+
+    assert lifecycle.active_version(owner_id=1, source="guide.md") == "v1"
+
+
+def test_ready_version_is_idempotent_and_skips_reembedding():
+    engine, sessions, lifecycle, store = setup()
+    first_model = Model()
+    config = IngestionConfig(chunk_size=5, overlap=0, document_version="v1")
+    ingest_document(
+        sessions, store, first_model, owner_id=1, source="guide.md", text="same", config=config, lifecycle=lifecycle
+    )
+    second_model = Model()
+    count = ingest_document(
+        sessions, store, second_model, owner_id=1, source="guide.md", text="same", config=config, lifecycle=lifecycle
+    )
+
+    assert count == 0
+    assert second_model.calls == 0
