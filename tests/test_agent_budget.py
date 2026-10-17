@@ -3,12 +3,12 @@ import json
 import httpx
 import pytest
 
-from agent_loop import (
+from agent.agent_loop import (
     AgentBudget,
     AgentBudgetExceededError,
     run_readonly_agent,
 )
-from deepseek_api import DeepSeekSettings
+from llm.deepseek_api import DeepSeekSettings
 
 
 SETTINGS = DeepSeekSettings("key", "https://api.deepseek.example", "model")

@@ -9,7 +9,7 @@ from sqlalchemy.pool import NullPool
 project_dir = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(project_dir))
 
-from models import Base  # noqa: E402
+from storage.models import Base  # noqa: E402
 
 
 config = context.config

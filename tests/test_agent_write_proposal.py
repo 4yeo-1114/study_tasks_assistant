@@ -2,13 +2,13 @@ import json
 
 import httpx
 
-from agent_loop import AgentState, run_readonly_agent
-from auth import AuthService
-from database import Database
-from deepseek_api import DeepSeekSettings
-from migration import upgrade_database
-from repository import TaskRepository
-from task_proposals import TaskProposalService
+from agent.agent_loop import AgentState, run_readonly_agent
+from web.auth import AuthService
+from storage.database import Database
+from llm.deepseek_api import DeepSeekSettings
+from storage.migration import upgrade_database
+from tasks.repository import TaskRepository
+from tasks.task_proposals import TaskProposalService
 
 
 def test_agent_create_task_only_persists_pending_proposal(tmp_path):

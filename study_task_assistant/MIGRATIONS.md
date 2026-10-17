@@ -1,6 +1,6 @@
 # 数据库表结构迁移
 
-项目使用 Alembic 管理表结构。`api.py` 启动时只创建 Engine 和 Session factory，不自动建表；先执行迁移，再启动服务。迁移文件位于 `migrations/versions/`，当前版本为 `0004_proposal_task_history`。第一版创建任务表，第二版增加用户和任务归属，第三版增加等待用户确认的任务提案表，第四版让已确认任务删除后仍能保留提案历史 ID。
+项目使用 Alembic 管理表结构。`web/api.py` 启动时只创建 Engine 和 Session factory，不自动建表；先执行迁移，再启动服务。迁移文件位于 `migrations/versions/`，当前版本为 `0004_proposal_task_history`。第一版创建任务表，第二版增加用户和任务归属，第三版增加等待用户确认的任务提案表，第四版让已确认任务删除后仍能保留提案历史 ID。
 
 在仓库根目录的 PowerShell 中，安装依赖后执行：
 

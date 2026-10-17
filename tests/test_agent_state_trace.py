@@ -2,8 +2,8 @@ import json
 
 import httpx
 
-from agent_loop import AgentState, run_readonly_agent
-from deepseek_api import DeepSeekSettings
+from agent.agent_loop import AgentState, run_readonly_agent
+from llm.deepseek_api import DeepSeekSettings
 
 
 SETTINGS = DeepSeekSettings("test-key", "https://api.deepseek.example", "deepseek-flash")

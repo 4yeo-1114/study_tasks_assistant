@@ -6,14 +6,14 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from document_service import (
+from knowledge.document_service import (
     DocumentNotFoundError,
     DocumentService,
     DocumentUpload,
 )
-from models import Base
-from document_lifecycle import DocumentVersionConflictError
-from observability import request_context
+from storage.models import Base
+from knowledge.document_lifecycle import DocumentVersionConflictError
+from core.observability import request_context
 
 
 class FakeModel:

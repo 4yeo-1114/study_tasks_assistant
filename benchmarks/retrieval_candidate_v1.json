@@ -1,0 +1,940 @@
+{
+  "version": "retrieval-candidate-v1",
+  "dataset_kind": "ai_generated_candidate",
+  "review_status": "pending_human_review",
+  "description": "120-case candidate set generated from public synthetic chunks; not yet acceptance data.",
+  "chunks": [
+    {
+      "source": "auth.md",
+      "chunk_id": 1,
+      "text": "JWT 从 token 提取 user_id，owner_id 由服务端注入。"
+    },
+    {
+      "source": "auth.md",
+      "chunk_id": 2,
+      "text": "owner_id 在 SQL 中过滤，避免跨用户读取。"
+    },
+    {
+      "source": "proposals.md",
+      "chunk_id": 1,
+      "text": "proposal pending 等待用户 confirm 确认，再创建任务。"
+    },
+    {
+      "source": "proposals.md",
+      "chunk_id": 2,
+      "text": "confirm 事务与 idempotency_key 防止重复写入。"
+    },
+    {
+      "source": "retrieval.md",
+      "chunk_id": 1,
+      "text": "RRF 按关键词与向量排名融合，不直接相加分数。"
+    },
+    {
+      "source": "retrieval.md",
+      "chunk_id": 2,
+      "text": "pgvector HNSW 索引需要 EXPLAIN 验证使用情况。"
+    },
+    {
+      "source": "ingestion.md",
+      "chunk_id": 1,
+      "text": "Embedding 逐块编码，当前编码在写入事务内。"
+    },
+    {
+      "source": "ingestion.md",
+      "chunk_id": 2,
+      "text": "ready active_version 文档版本激活，失败保留旧版本。"
+    },
+    {
+      "source": "fitness.md",
+      "chunk_id": 1,
+      "text": "训练量由重量乘次数计算，同动作比较个人纪录。"
+    },
+    {
+      "source": "fitness.md",
+      "chunk_id": 2,
+      "text": "体重展示周均趋势，不能直接判断肌肉增长。"
+    }
+  ],
+  "cases": [
+    {
+      "id": "p-auth.md-1-01",
+      "query": "JWT 中的 user_id 从哪里提取",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-02",
+      "query": "服务端如何处理 token 里的用户标识",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-03",
+      "query": "用户身份字段由哪一侧注入",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-04",
+      "query": "token 和 owner_id 的关系是什么",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-05",
+      "query": "怎样避免模型自行生成 user_id",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-06",
+      "query": "认证请求如何得到用户编号",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-07",
+      "query": "user_id 是客户端传入还是服务端解析",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-1-08",
+      "query": "JWT 身份来源怎么确定",
+      "relevant_chunks": [
+        "auth.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-01",
+      "query": "SQL 怎样限制只能读自己的资料",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-02",
+      "query": "owner_id 过滤解决什么问题",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-03",
+      "query": "如何避免跨用户查询",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-04",
+      "query": "查询条件怎样隔离用户数据",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-05",
+      "query": "用户范围过滤应该放在哪里",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-06",
+      "query": "文档检索怎样防止越权",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-07",
+      "query": "数据库读取如何绑定当前用户",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-auth.md-2-08",
+      "query": "跨账号读取为什么会被拦截",
+      "relevant_chunks": [
+        "auth.md#2"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-proposals.md-1-01",
+      "query": "pending proposal 什么时候创建任务",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-proposals.md-1-02",
+      "query": "用户确认前任务会写入吗",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-proposals.md-1-03",
+      "query": "提案状态 pending 表示什么",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "p-proposals.md-1-04",
+      "query": "创建任务需要经过哪一步确认",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "development"
+    },
+    {
+      "id": "n-001",
+      "query": "Redis 集群如何部署",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-002",
+      "query": "Kubernetes 滚动升级怎么做",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-003",
+      "query": "OAuth 回调地址如何配置",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-004",
+      "query": "图片 OCR 文字怎样提取",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-005",
+      "query": "步数设备如何同步",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-006",
+      "query": "血压数据怎么分析",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-007",
+      "query": "MySQL 分库分表怎么设计",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-008",
+      "query": "消息队列怎样保证顺序",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-009",
+      "query": "GraphQL 查询如何写",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-010",
+      "query": "GPU 显存不足怎么处理",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-011",
+      "query": "Docker Swarm 和 Kubernetes 区别",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-012",
+      "query": "CSS 网格布局怎么调",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-013",
+      "query": "Transformer 注意力公式是什么",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-014",
+      "query": "B 树索引怎样维护",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-015",
+      "query": "Redis 过期策略有哪些",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-016",
+      "query": "Kafka 消费者如何扩容",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-017",
+      "query": "OAuth2 access token 如何刷新",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-018",
+      "query": "图片压缩质量怎么设置",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-019",
+      "query": "跑步配速如何安排",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "n-020",
+      "query": "心率区间如何计算",
+      "relevant_chunks": [],
+      "split": "development"
+    },
+    {
+      "id": "p-proposals.md-1-05",
+      "query": "任务提案怎样等待用户同意",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-1-06",
+      "query": "确认按钮对应哪个状态",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-1-07",
+      "query": "模型生成任务建议后如何处理",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-1-08",
+      "query": "正式任务在确认前是否存在",
+      "relevant_chunks": [
+        "proposals.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-01",
+      "query": "怎样避免重复确认写入两条任务",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-02",
+      "query": "幂等键防止什么问题",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-03",
+      "query": "confirm 事务如何保证只写一次",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-04",
+      "query": "重复点击确认会发生什么",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-05",
+      "query": "任务确认的重复提交怎么处理",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-06",
+      "query": "idempotency_key 用在什么地方",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-07",
+      "query": "同一个提案再次确认是否重复创建",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-proposals.md-2-08",
+      "query": "确认接口如何避免重试副作用",
+      "relevant_chunks": [
+        "proposals.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-01",
+      "query": "RRF 如何融合关键词和向量排名",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-02",
+      "query": "混合检索是否直接相加分数",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-03",
+      "query": "关键词召回与向量召回怎样合并",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-04",
+      "query": "RRF 的排序依据是什么",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-05",
+      "query": "两路检索结果如何做排名融合",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-06",
+      "query": "RRF 和分数相加有什么区别",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-07",
+      "query": "混合检索的候选如何去重",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-1-08",
+      "query": "向量和关键词排名怎么合成",
+      "relevant_chunks": [
+        "retrieval.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-01",
+      "query": "怎样用 EXPLAIN 检查 pgvector HNSW",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-02",
+      "query": "HNSW 索引需要验证什么",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-03",
+      "query": "向量索引是否被使用如何确认",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-04",
+      "query": "PostgreSQL 执行计划怎么看 HNSW",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-05",
+      "query": "pgvector 的 HNSW 索引如何排查",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-06",
+      "query": "检索计划中应该出现哪个索引名",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-07",
+      "query": "向量查询为什么要看 EXPLAIN",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-retrieval.md-2-08",
+      "query": "如何判断数据库走了向量索引",
+      "relevant_chunks": [
+        "retrieval.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-01",
+      "query": "Embedding 是逐块生成还是一次完成",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-02",
+      "query": "向量编码当前在哪个事务里",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-03",
+      "query": "文档切块后如何生成 embedding",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-04",
+      "query": "入库时向量化的顺序是什么",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-05",
+      "query": "每个 chunk 的向量怎样计算",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-06",
+      "query": "embedding 写入事务有什么影响",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-07",
+      "query": "批量向量化和数据库写入如何衔接",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-1-08",
+      "query": "当前入库是否把编码放在事务内",
+      "relevant_chunks": [
+        "ingestion.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-01",
+      "query": "文档版本什么时候变成 ready",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-02",
+      "query": "active_version 的作用是什么",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-03",
+      "query": "新版本入库失败旧版本会怎样",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-04",
+      "query": "如何激活一个文档版本",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-05",
+      "query": "ready 状态和 active_version 有什么关系",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-06",
+      "query": "重建文档失败是否丢失旧数据",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-07",
+      "query": "哪个版本会参与检索",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-ingestion.md-2-08",
+      "query": "文档版本切换如何保证可用",
+      "relevant_chunks": [
+        "ingestion.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-01",
+      "query": "训练量怎样计算",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-02",
+      "query": "重量和次数如何得到训练量",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-03",
+      "query": "个人纪录应该比较哪些动作",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-04",
+      "query": "同一动作的 PR 怎么判断",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-05",
+      "query": "力量训练的总量公式是什么",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-06",
+      "query": "训练进步统计是否跨动作比较",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-07",
+      "query": "动作组记录需要哪些数值",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-1-08",
+      "query": "训练量能否用重量乘次数表示",
+      "relevant_chunks": [
+        "fitness.md#1"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-01",
+      "query": "体重趋势应该按什么方式展示",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-02",
+      "query": "为什么使用周均体重",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-03",
+      "query": "体重数据能直接证明增肌吗",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-04",
+      "query": "体重记录如何计算趋势",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-05",
+      "query": "周平均体重有什么作用",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-06",
+      "query": "能否根据体重判断体脂变化",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-07",
+      "query": "体重曲线应该避免什么结论",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "p-fitness.md-2-08",
+      "query": "体重统计和肌肉增长的关系",
+      "relevant_chunks": [
+        "fitness.md#2"
+      ],
+      "split": "frozen"
+    },
+    {
+      "id": "n-021",
+      "query": "蛋白质摄入量怎么估计",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-022",
+      "query": "睡眠阶段如何检测",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-023",
+      "query": "体脂秤数据是否准确",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-024",
+      "query": "深蹲膝盖疼怎么办",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-025",
+      "query": "Linux 内核参数怎么修改",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-026",
+      "query": "TCP 拥塞控制如何工作",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-027",
+      "query": "TLS 握手包含哪些步骤",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-028",
+      "query": "向量数据库如何分片",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-029",
+      "query": "BM25 的公式怎么推导",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-030",
+      "query": "大模型温度参数如何选择",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-031",
+      "query": "React 状态管理怎么做",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-032",
+      "query": "FastAPI WebSocket 怎么写",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-033",
+      "query": "PostgreSQL 主从复制怎么配",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-034",
+      "query": "CI/CD 流水线如何部署",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-035",
+      "query": "OCR 模型如何训练",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-036",
+      "query": "运动手表如何导出 FIT 文件",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-037",
+      "query": "卧推肩痛应该怎样处理",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-038",
+      "query": "增肌期热量盈余怎么计算",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-039",
+      "query": "训练后如何安排拉伸",
+      "relevant_chunks": [],
+      "split": "frozen"
+    },
+    {
+      "id": "n-040",
+      "query": "医学诊断模型如何评估",
+      "relevant_chunks": [],
+      "split": "frozen"
+    }
+  ]
+}

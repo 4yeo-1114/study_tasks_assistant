@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from api import app
+from web.api import app
 
 
 def test_app_route_serves_the_workbench_html():

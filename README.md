@@ -38,18 +38,23 @@ Browser -> FastAPI -> Agent Loop -> DeepSeek
 
 ```text
 study_task_assistant/
-├── api.py / agent_loop.py / auth.py
-├── models.py / database.py / service.py / repository.py
-├── task_proposals.py / deepseek_api.py / deepseek_tools.py
-├── knowledge_runtime.py / knowledge_tools.py
-├── document_ingestion.py / document_lifecycle.py / document_service.py
-├── embedding_retrieval.py / keyword_retrieval.py / hybrid_retrieval.py
-├── pgvector_store.py / retrieval_eval.py / rag*.py
+├── api.py                      # Uvicorn 启动入口
+├── web/                        # HTTP 路由、JWT 认证、请求/响应结构
+├── agent/                      # Agent 循环、工具执行、Agent 评测
+├── llm/                        # DeepSeek 协议、客户端、工具 schema
+├── tasks/                      # 任务业务、仓储、写入提案
+├── knowledge/                  # 文档管理、Embedding、检索、RAG 评测
+├── storage/                    # 数据库连接、ORM 模型、pgvector SQL
+├── core/                       # 结构化日志、重试策略
+├── legacy/                     # 早期 CLI 实现
+├── examples/                   # 学习演示脚本
 ├── migrations/                 # Alembic 数据库迁移
 ├── frontend/index.html         # Web 工作台
 ├── Dockerfile / compose.yaml
 └── requirements.txt
 ```
+
+职责和代码定位说明见 [模块目录说明](study_task_assistant/MODULE_LAYOUT.md)。业务代码使用明确的包路径导入，例如 `from core.observability import log_event`。本地启动命令继续使用 `api:app`。
 
 ## 本地开发
 

@@ -1,5 +1,5 @@
-from agent_evals import AgentEvalCase, run_agent_evals
-from agent_loop import AgentAnswer, AgentStepLimitError
+from agent.agent_evals import AgentEvalCase, run_agent_evals
+from agent.agent_loop import AgentAnswer, AgentStepLimitError
 
 
 def test_eval_suite_scores_behavior_without_exact_answer_matching():

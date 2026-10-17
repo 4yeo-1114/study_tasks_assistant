@@ -1,4 +1,4 @@
-from pgvector_store import PgVectorConfig, PgVectorStore
+from storage.pgvector_store import PgVectorConfig, PgVectorStore
 
 
 class Rows:

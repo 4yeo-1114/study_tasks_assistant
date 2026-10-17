@@ -2,8 +2,8 @@ import logging
 
 import pytest
 
-from deepseek_api import DeepSeekAPIError, DeepSeekNetworkError
-from reliability import RetryPolicy, call_with_retry
+from llm.deepseek_api import DeepSeekAPIError, DeepSeekNetworkError
+from core.reliability import RetryPolicy, call_with_retry
 
 
 def test_retryable_model_request_reuses_request_id_and_increases_attempt(caplog):

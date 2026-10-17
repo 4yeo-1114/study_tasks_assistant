@@ -1,7 +1,7 @@
 import pytest
 
-from deepseek_tools import ToolCallProposal
-from readonly_tools import (
+from llm.deepseek_tools import ToolCallProposal
+from agent.readonly_tools import (
     ToolArgumentsError,
     ToolNotAllowedError,
     execute_readonly_tool,

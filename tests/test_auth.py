@@ -5,8 +5,8 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, text
 
-from api import create_app
-from migration import upgrade_database
+from web.api import create_app
+from storage.migration import upgrade_database
 
 
 def client_for(tmp_path):

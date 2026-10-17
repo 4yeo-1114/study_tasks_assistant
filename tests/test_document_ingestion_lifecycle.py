@@ -2,10 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 import pytest
 
-from document_ingestion import IngestionConfig, ingest_document
-from document_lifecycle import DocumentLifecycle, DocumentState
-from models import Base
-from rag import DocumentChunk
+from knowledge.document_ingestion import IngestionConfig, ingest_document
+from knowledge.document_lifecycle import DocumentLifecycle, DocumentState
+from storage.models import Base
+from knowledge.rag import DocumentChunk
 
 
 class Model:

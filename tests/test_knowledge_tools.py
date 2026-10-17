@@ -3,13 +3,13 @@ import logging
 
 import pytest
 
-from deepseek_tools import ToolCallProposal
-from knowledge_tools import (
+from llm.deepseek_tools import ToolCallProposal
+from agent.knowledge_tools import (
     SEARCH_KNOWLEDGE_TOOL,
     KnowledgeToolExecutor,
     SearchKnowledgeArguments,
 )
-from observability import request_context
+from core.observability import request_context
 
 
 class FakeRetriever:

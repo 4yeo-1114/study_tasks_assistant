@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from api import create_app, normalize_database_url
-from migration import upgrade_database
+from web.api import create_app, normalize_database_url
+from storage.migration import upgrade_database
 
 
 def migrated_app(database_location):

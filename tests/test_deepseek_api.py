@@ -3,7 +3,7 @@ import json
 import httpx
 import pytest
 
-from deepseek_api import (
+from llm.deepseek_api import (
     DeepSeekAPIError,
     DeepSeekConfigurationError,
     DeepSeekNetworkError,
@@ -14,7 +14,7 @@ from deepseek_api import (
     DeepSeekUsage,
     request_chat,
 )
-from model_client import ModelMessage
+from llm.model_client import ModelMessage
 
 
 def test_settings_require_a_non_blank_api_key(monkeypatch):

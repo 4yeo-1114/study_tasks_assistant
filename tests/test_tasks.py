@@ -1,5 +1,5 @@
 import pytest
-from main import add_task,list_tasks
+from legacy.main import add_task,list_tasks
 
 def test_add_rejects_bad_priority():
     tasks = []

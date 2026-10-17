@@ -2,9 +2,9 @@ import os
 
 import pytest
 
-from deepseek_api import DeepSeekSettings
-from deepseek_client import DeepSeekClient
-from model_client import ModelMessage
+from llm.deepseek_api import DeepSeekSettings
+from llm.deepseek_client import DeepSeekClient
+from llm.model_client import ModelMessage
 
 
 @pytest.mark.skipif(

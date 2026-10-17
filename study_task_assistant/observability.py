@@ -8,6 +8,7 @@ from collections.abc import Sequence
 from typing import Iterator
 
 
+#ContexVar将值绑定在当前执行上下文中
 _request_id: ContextVar[str | None] = ContextVar("request_id", default=None)
 
 

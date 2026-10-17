@@ -13,11 +13,11 @@
 
 | 模块 | 职责 | 不负责什么 |
 |---|---|---|
-| `reliability.py` 的 `RetryPolicy` | 根据错误类型、操作类型和 attempt 判断能否重试；计算退避时间 | 不发送 HTTP，不执行工具 |
-| `reliability.py` 的 `call_with_retry` | 管理 attempt、睡眠、request ID 和安全日志 | 不解析模型响应，不知道 Tool Call |
-| `agent_loop.py` | 管理 messages、模型 step、Tool Call、工具结果回传和停止条件 | 不自行决定哪些 HTTP 错误可重试 |
-| `deepseek_tools.py` | 请求并解析单轮工具提案 | 不执行模型提出的工具 |
-| `agent_evals.py` | 重复运行固定场景，比较可观察行为 | 不修改 Agent，不按完整回答逐字评分 |
+| `core/reliability.py` 的 `RetryPolicy` | 根据错误类型、操作类型和 attempt 判断能否重试；计算退避时间 | 不发送 HTTP，不执行工具 |
+| `core/reliability.py` 的 `call_with_retry` | 管理 attempt、睡眠、request ID 和安全日志 | 不解析模型响应，不知道 Tool Call |
+| `agent/agent_loop.py` | 管理 messages、模型 step、Tool Call、工具结果回传和停止条件 | 不自行决定哪些 HTTP 错误可重试 |
+| `llm/deepseek_tools.py` | 请求并解析单轮工具提案 | 不执行模型提出的工具 |
+| `agent/agent_evals.py` | 重复运行固定场景，比较可观察行为 | 不修改 Agent，不按完整回答逐字评分 |
 
 ## 3. 一次带重试的只读 Agent 数据流
 

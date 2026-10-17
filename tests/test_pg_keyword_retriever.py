@@ -1,4 +1,4 @@
-from keyword_retrieval import PgKeywordRetriever
+from knowledge.keyword_retrieval import PgKeywordRetriever
 
 
 class Row:

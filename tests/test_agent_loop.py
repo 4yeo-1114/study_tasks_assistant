@@ -4,18 +4,18 @@ import logging
 import httpx
 import pytest
 
-from agent_loop import AgentStepLimitError, run_readonly_agent
-from auth import AuthService
-from database import Database
-from deepseek_api import DeepSeekAPIError, DeepSeekSettings, DeepSeekTimeoutError
-from deepseek_tools import DeepSeekToolResponseError
-from readonly_tools import ToolArgumentsError
-from reliability import RetryPolicy
-from migration import upgrade_database
-from repository import TaskRepository
-from schemas import TaskCreate
-from service import TaskService
-from observability import request_context
+from agent.agent_loop import AgentStepLimitError, run_readonly_agent
+from web.auth import AuthService
+from storage.database import Database
+from llm.deepseek_api import DeepSeekAPIError, DeepSeekSettings, DeepSeekTimeoutError
+from llm.deepseek_tools import DeepSeekToolResponseError
+from agent.readonly_tools import ToolArgumentsError
+from core.reliability import RetryPolicy
+from storage.migration import upgrade_database
+from tasks.repository import TaskRepository
+from web.schemas import TaskCreate
+from tasks.service import TaskService
+from core.observability import request_context
 
 
 SETTINGS = DeepSeekSettings("test-key", "https://api.deepseek.example", "deepseek-flash")

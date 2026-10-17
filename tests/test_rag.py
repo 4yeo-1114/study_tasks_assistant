@@ -1,6 +1,6 @@
 import pytest
 
-from rag import DocumentChunk, KeywordRetriever, tokenize, build_context
+from knowledge.rag import DocumentChunk, KeywordRetriever, tokenize, build_context
 
 
 def test_tokenize_keeps_chinese_terms_and_english_words():

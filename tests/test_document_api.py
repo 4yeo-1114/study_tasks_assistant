@@ -1,9 +1,9 @@
 from fastapi.testclient import TestClient
 
-from api import create_app
-from database import Database
-from document_service import DocumentService
-from migration import upgrade_database
+from web.api import create_app
+from storage.database import Database
+from knowledge.document_service import DocumentService
+from storage.migration import upgrade_database
 
 
 class FakeModel:

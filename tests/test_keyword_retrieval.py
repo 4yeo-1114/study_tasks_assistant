@@ -1,8 +1,8 @@
 import pytest
 
-from hybrid_retrieval import HybridRetriever, RetrievalFilters
-from keyword_retrieval import KeywordIndexedChunk, ScopedKeywordRetriever
-from rag import DocumentChunk
+from knowledge.hybrid_retrieval import HybridRetriever, RetrievalFilters
+from knowledge.keyword_retrieval import KeywordIndexedChunk, ScopedKeywordRetriever
+from knowledge.rag import DocumentChunk
 
 
 def record(owner_id, version, source, chunk_id, text):

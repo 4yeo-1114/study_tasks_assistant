@@ -1,7 +1,7 @@
 import pytest
 
-from database import Database
-from knowledge_runtime import (
+from storage.database import Database
+from knowledge.knowledge_runtime import (
     KnowledgeRuntime,
     KnowledgeRuntimeConfig,
     KnowledgeRuntimeError,

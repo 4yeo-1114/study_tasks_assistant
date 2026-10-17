@@ -2,11 +2,11 @@ import json
 
 import httpx
 
-from agent_loop import run_readonly_agent
-from deepseek_api import DeepSeekSettings
-from hybrid_retrieval import RetrievalCandidate
-from rag import DocumentChunk
-from knowledge_tools import KnowledgeToolExecutor
+from agent.agent_loop import run_readonly_agent
+from llm.deepseek_api import DeepSeekSettings
+from knowledge.hybrid_retrieval import RetrievalCandidate
+from knowledge.rag import DocumentChunk
+from agent.knowledge_tools import KnowledgeToolExecutor
 
 
 SETTINGS = DeepSeekSettings("test-key", "https://api.deepseek.example", "deepseek-flash")

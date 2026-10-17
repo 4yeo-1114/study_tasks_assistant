@@ -3,14 +3,14 @@ import json
 import httpx
 import pytest
 
-from deepseek_api import (
+from llm.deepseek_api import (
     DeepSeekAPIError,
     DeepSeekResponseError,
     DeepSeekSettings,
     DeepSeekTimeoutError,
     stream_chat,
 )
-from model_client import ModelMessage
+from llm.model_client import ModelMessage
 
 
 SETTINGS = DeepSeekSettings(

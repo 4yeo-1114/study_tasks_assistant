@@ -3,10 +3,10 @@ import os
 import pytest
 from sqlalchemy.engine import make_url
 
-from database import Database
-from migration import upgrade_database
-from models import Base, User
-from repository import TaskRepository
+from storage.database import Database
+from storage.migration import upgrade_database
+from storage.models import Base, User
+from tasks.repository import TaskRepository
 
 
 def test_postgres_repository_round_trip():

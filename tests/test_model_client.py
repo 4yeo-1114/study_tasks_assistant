@@ -1,6 +1,6 @@
 import pytest
 
-from model_client import (
+from llm.model_client import (
     FakeModelClient,
     ModelMessage,
     ModelTimeoutError,

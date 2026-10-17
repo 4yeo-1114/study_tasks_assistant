@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from document_lifecycle import DocumentLifecycle, DocumentState
-from models import Base, Document
+from knowledge.document_lifecycle import DocumentLifecycle, DocumentState
+from storage.models import Base, Document
 
 
 class Store:

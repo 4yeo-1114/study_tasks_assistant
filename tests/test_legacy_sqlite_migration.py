@@ -1,7 +1,7 @@
 import sqlite3
 from contextlib import closing
 
-from legacy_sqlite_migration import migrate_legacy_sqlite
+from storage.legacy_sqlite_migration import migrate_legacy_sqlite
 
 
 def test_legacy_sqlite_rows_are_preserved_and_dates_normalized(tmp_path):

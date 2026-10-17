@@ -3,14 +3,14 @@ import json
 import httpx
 import pytest
 
-from deepseek_api import DeepSeekAPIError, DeepSeekSettings
-from deepseek_tools import (
+from llm.deepseek_api import DeepSeekAPIError, DeepSeekSettings
+from llm.deepseek_tools import (
     LIST_TASKS_TOOL,
     DeepSeekToolResponseError,
     request_tool_proposal,
 )
-from model_client import ModelMessage
-from reliability import RetryPolicy
+from llm.model_client import ModelMessage
+from core.reliability import RetryPolicy
 
 
 SETTINGS = DeepSeekSettings(

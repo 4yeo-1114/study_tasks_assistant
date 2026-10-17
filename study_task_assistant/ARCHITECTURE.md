@@ -34,16 +34,16 @@ Agent Loop
 
 | 模块 | 关键文件 | 职责 |
 |---|---|---|
-| API 与认证 | `api.py`, `auth.py` | 解析 HTTP 请求、校验 JWT、注入可信 `user_id`、映射错误状态码 |
-| 任务业务 | `service.py`, `repository.py` | 任务的查询、创建、完成和删除 |
-| Agent 编排 | `agent_loop.py` | 管理消息历史、模型 step、工具调用、预算、停止条件和 trace |
-| 工具定义 | `deepseek_tools.py`, `knowledge_tools.py`, `readonly_tools.py` | schema、白名单、参数校验和本地执行 |
-| 写入确认 | `task_proposals.py` | pending/confirmed/rejected 状态、幂等和确认事务 |
-| RAG 检索 | `keyword_retrieval.py`, `embedding_retrieval.py`, `hybrid_retrieval.py` | 关键词、向量和融合排序 |
-| 文档入库 | `document_service.py`, `document_ingestion.py`, `document_lifecycle.py` | 文档状态、版本、切块、Embedding、向量写入和删除 |
-| 数据存储 | `database.py`, `models.py`, `pgvector_store.py` | SQLAlchemy Session、ORM 模型和 pgvector SQL |
-| 生产组装 | `knowledge_runtime.py` | 共享模型/检索器，按请求创建有状态工具执行器 |
-| 观测 | `observability.py` | request ID 传播、JSON 日志、耗时和错误类型 |
+| API 与认证 | `web/api.py`, `web/auth.py` | 解析 HTTP 请求、校验 JWT、注入可信 `user_id`、映射错误状态码 |
+| 任务业务 | `tasks/service.py`, `tasks/repository.py` | 任务的查询、创建、完成和删除 |
+| Agent 编排 | `agent/agent_loop.py` | 管理消息历史、模型 step、工具调用、预算、停止条件和 trace |
+| 工具定义 | `llm/deepseek_tools.py`, `agent/knowledge_tools.py`, `agent/readonly_tools.py` | schema、白名单、参数校验和本地执行 |
+| 写入确认 | `tasks/task_proposals.py` | pending/confirmed/rejected 状态、幂等和确认事务 |
+| RAG 检索 | `knowledge/keyword_retrieval.py`, `knowledge/embedding_retrieval.py`, `knowledge/hybrid_retrieval.py` | 关键词、向量和融合排序 |
+| 文档入库 | `knowledge/document_service.py`, `knowledge/document_ingestion.py`, `knowledge/document_lifecycle.py` | 文档状态、版本、切块、Embedding、向量写入和删除 |
+| 数据存储 | `storage/database.py`, `storage/models.py`, `storage/pgvector_store.py` | SQLAlchemy Session、ORM 模型和 pgvector SQL |
+| 生产组装 | `knowledge/knowledge_runtime.py` | 共享模型/检索器，按请求创建有状态工具执行器 |
+| 观测 | `core/observability.py` | request ID 传播、JSON 日志、耗时和错误类型 |
 
 ## Agent 请求数据流
 
@@ -153,7 +153,7 @@ API 错误映射：
 
 ## 可观测性
 
-`observability.py` 使用 `ContextVar` 保存当前 HTTP 请求的 `request_id`。深层模块调用 `log_event()` 时会自动带上它。
+`core/observability.py` 使用 `ContextVar` 保存当前 HTTP 请求的 `request_id`。深层模块调用 `log_event()` 时会自动带上它。
 
 日志关联层次：
 

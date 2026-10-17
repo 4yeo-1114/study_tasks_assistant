@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from rag import DocumentChunk
-from hybrid_retrieval import HybridRetriever
+from knowledge.rag import DocumentChunk
+from knowledge.hybrid_retrieval import HybridRetriever
 
 
 @dataclass(frozen=True)
@@ -79,8 +79,8 @@ from dataclasses import dataclass
 
 import pytest
 
-from hybrid_retrieval import HybridRetriever, RetrievalFilters
-from rag import DocumentChunk
+from knowledge.hybrid_retrieval import HybridRetriever, RetrievalFilters
+from knowledge.rag import DocumentChunk
 
 
 @dataclass(frozen=True)

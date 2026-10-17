@@ -1,0 +1,31 @@
+{
+  "version": "smoke-v1",
+  "dataset_kind": "synthetic_smoke",
+  "description": "AI authored pipeline smoke cases; not the 120-case acceptance set or a production benchmark.",
+  "chunks": [
+    {"source": "auth.md", "chunk_id": 1, "text": "JWT 从 token 提取 user_id，owner_id 由服务端注入。"},
+    {"source": "auth.md", "chunk_id": 2, "text": "owner_id 在 SQL 中过滤，避免跨用户读取。"},
+    {"source": "proposals.md", "chunk_id": 1, "text": "proposal pending 等待用户 confirm 确认，再创建任务。"},
+    {"source": "proposals.md", "chunk_id": 2, "text": "confirm 事务与 idempotency_key 防止重复写入。"},
+    {"source": "retrieval.md", "chunk_id": 1, "text": "RRF 按关键词与向量排名融合，不直接相加分数。"},
+    {"source": "retrieval.md", "chunk_id": 2, "text": "pgvector HNSW 索引需要 EXPLAIN 验证使用情况。"},
+    {"source": "ingestion.md", "chunk_id": 1, "text": "Embedding 逐块编码，当前编码在写入事务内。"},
+    {"source": "ingestion.md", "chunk_id": 2, "text": "ready active_version 文档版本激活，失败保留旧版本。"},
+    {"source": "fitness.md", "chunk_id": 1, "text": "训练量由重量乘次数计算，同动作比较个人纪录。"},
+    {"source": "fitness.md", "chunk_id": 2, "text": "体重展示周均趋势，不能直接判断肌肉增长。"}
+  ],
+  "cases": [
+    {"id": "s01", "split": "smoke", "query": "JWT user_id", "relevant_chunks": ["auth.md#1"]},
+    {"id": "s02", "split": "smoke", "query": "owner_id", "relevant_chunks": ["auth.md#1", "auth.md#2"]},
+    {"id": "s03", "split": "smoke", "query": "confirm", "relevant_chunks": ["proposals.md#1", "proposals.md#2"]},
+    {"id": "s04", "split": "smoke", "query": "RRF", "relevant_chunks": ["retrieval.md#1"]},
+    {"id": "s05", "split": "smoke", "query": "HNSW EXPLAIN", "relevant_chunks": ["retrieval.md#2"]},
+    {"id": "s06", "split": "smoke", "query": "Embedding", "relevant_chunks": ["ingestion.md#1"]},
+    {"id": "s07", "split": "smoke", "query": "active_version", "relevant_chunks": ["ingestion.md#2"]},
+    {"id": "s08", "split": "smoke", "query": "如何避免同一次确认创建两条记录", "relevant_chunks": ["proposals.md#2"]},
+    {"id": "s09", "split": "smoke", "query": "训练量", "relevant_chunks": ["fitness.md#1"]},
+    {"id": "s10", "split": "smoke", "query": "体重", "relevant_chunks": ["fitness.md#2"]},
+    {"id": "s11", "split": "smoke", "query": "Kubernetes", "relevant_chunks": []},
+    {"id": "s12", "split": "smoke", "query": "Redis", "relevant_chunks": []}
+  ]
+}

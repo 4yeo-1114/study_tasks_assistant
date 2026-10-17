@@ -1,10 +1,10 @@
 from fastapi.testclient import TestClient
 
-import api
-from api import create_app
-from deepseek_tools import ToolCallProposal
-from migration import upgrade_database
-from task_proposals import TaskProposalService
+import web.api as api
+from web.api import create_app
+from llm.deepseek_tools import ToolCallProposal
+from storage.migration import upgrade_database
+from tasks.task_proposals import TaskProposalService
 
 
 def test_confirmation_endpoint_requires_owner_and_is_idempotent(tmp_path):

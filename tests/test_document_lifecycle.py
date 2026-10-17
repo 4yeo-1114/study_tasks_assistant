@@ -4,8 +4,8 @@ import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from document_lifecycle import DocumentLifecycle, DocumentState
-from models import Base
+from knowledge.document_lifecycle import DocumentLifecycle, DocumentState
+from storage.models import Base
 
 
 def make_service():

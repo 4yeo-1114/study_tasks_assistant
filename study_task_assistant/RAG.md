@@ -38,7 +38,7 @@ Embedding 检索把文本转成向量，能处理更多语义相似表达，但�
 
 ## 固定评测基线
 
-`retrieval_eval.py` 将固定问题和期望来源保存为 `RetrievalEvalCase`，运行检索器后生成 `RetrievalEvalReport`。
+`knowledge/retrieval_eval.py` 将固定问题和期望来源保存为 `RetrievalEvalCase`，运行检索器后生成 `RetrievalEvalReport`。
 
 - `top1_hit`：期望来源是否排在第一位。
 - `top_k_hit`：期望来源是否出现在返回候选集合中。
@@ -47,7 +47,7 @@ Embedding 检索把文本转成向量，能处理更多语义相似表达，但�
 首位命中和候选集合命中必须分开统计。正确来源排在第三位时，Top-K 可能成功，但 Top-1 失败。比较关键词检索和 embedding 检索时，使用同一批问题、同一批资料和同一组指标。
 ## 引用验证与无答案保护
 
-`rag_grounding.py` 负责把检索证据和模型生成连接起来：
+`knowledge/rag_grounding.py` 负责把检索证据和模型生成连接起来：
 
 1. 没有 `SearchResult` 时，直接返回资料不足，不调用生成器。
 2. 有结果时，把带来源的 `build_context()` 传给生成器。
@@ -72,7 +72,7 @@ Embedding 检索把文本转成向量，能处理更多语义相似表达，但�
 
 `system` 消息规定模型的行为边界：只能依据资料回答、资料不足时承认无法确认、主要结论要带来源。资料消息是证据上下文，不是指令，因此提示词明确说明资料中的文字只作证据。把资料单独作为消息还能减少它被误解为系统规则的风险。
 
-没有检索结果时，函数直接返回无答案，不调用 DeepSeek，避免无依据生成和不必要的 token 消耗。`request_chat()` 只负责 HTTP 请求及响应解析；`rag_grounding.py` 负责 RAG 业务规则和来源验证。
+没有检索结果时，函数直接返回无答案，不调用 DeepSeek，避免无依据生成和不必要的 token 消耗。`request_chat()` 只负责 HTTP 请求及响应解析；`knowledge/rag_grounding.py` 负责 RAG 业务规则和来源验证。
 
 引用验证通过不代表每个事实都已被证明：它只检查引用是否存在且属于本次检索结果。模型仍可能误读、夸大或加入证据中没有的内容；逐条事实核验属于更严格的后续能力。
 
@@ -108,7 +108,7 @@ Top-K 命中只表示正确资料进入候选集合，不能证明模型一定�
 
 ## W8-07：查询扩展与候选合并
 
-`retrieval_strategy.py` 提供两个基础函数：
+`knowledge/retrieval_strategy.py` 提供两个基础函数：
 
 - `expand_query()` 保留原问题，并加入有限、明确的检索变体；
 - `search_with_expansion()` 对每个变体检索，按 `(source, chunk_id)` 去重，保留同一片段的最高分，最后按分数排序并截断 `limit`。
@@ -136,7 +136,7 @@ Top-K 命中只表示正确资料进入候选集合，不能证明模型一定�
 
 ## W8-EMBEDDING-01：接入真实 embedding 模型
 
-`embedding_retrieval.py` 保留向量检索的模型无关接口，并新增 `SentenceTransformerEmbeddingModel`：
+`knowledge/embedding_retrieval.py` 保留向量检索的模型无关接口，并新增 `SentenceTransformerEmbeddingModel`：
 
 ```text
 SentenceTransformerEmbeddingModel
@@ -155,7 +155,7 @@ SentenceTransformerEmbeddingModel
 
 ## W8-EMBEDDING-02：比较关键词和真实向量检索
 
-`retrieval_eval.py` 新增 `evaluate_searcher()` 和 `compare_retrievers()`。它们只要求检索结果对象具有 `.chunk` 属性，因此可以同时评估：
+`knowledge/retrieval_eval.py` 新增 `evaluate_searcher()` 和 `compare_retrievers()`。它们只要求检索结果对象具有 `.chunk` 属性，因此可以同时评估：
 
 - `KeywordRetriever` 返回的 `SearchResult`；
 - `VectorRetriever` 返回的 `VectorSearchResult`。
@@ -214,7 +214,7 @@ SentenceTransformerEmbeddingModel
 
 ## W8-EMBEDDING-04：索引持久化
 
-`embedding_retrieval.py` 新增 `VectorIndex`：
+`knowledge/embedding_retrieval.py` 新增 `VectorIndex`：
 
 ```python
 index = retriever.index
@@ -237,7 +237,7 @@ retriever = VectorRetriever.from_index(loaded, model)
 
 ## W8-EMBEDDING-06：最小 pgvector 存储接口
 
-新增 `pgvector_store.py`，把 PostgreSQL 向量表的关键业务边界写成接口：
+新增 `storage/pgvector_store.py`，把 PostgreSQL 向量表的关键业务边界写成接口：
 
 - `PgVectorConfig`：固定模型名和向量维度；
 - `create_table_sql()`：创建 `document_chunks` 表，保存 owner、来源、正文、向量、模型和文档版本；
@@ -263,7 +263,7 @@ SQL 查询返回的是 pgvector 的 cosine distance；接口转换为 `score = 1
 迁移文件里的向量维度固定为 512，与当前 `BAAI/bge-small-zh-v1.5` 配置一致。以后更换模型或维度，应新增迁移或重新建立索引，不能直接修改历史迁移。
 ## W8-EMBEDDING-10：接回 RAG 编排层
 
-`generate_grounded_answer_from_retriever()` 位于 `rag_grounding.py`，负责把带
+`generate_grounded_answer_from_retriever()` 位于 `knowledge/rag_grounding.py`，负责把带
 `owner_id` 的检索器接到已有的引用校验和 DeepSeek 生成流程：
 
 ```text

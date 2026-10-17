@@ -1,9 +1,9 @@
 from datetime import date
 
-from database import Database
-from migration import upgrade_database
-from models import User
-from repository import TaskRepository
+from storage.database import Database
+from storage.migration import upgrade_database
+from storage.models import User
+from tasks.repository import TaskRepository
 
 
 def test_repository_crud_uses_sessions_and_persists(tmp_path):

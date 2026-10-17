@@ -3,9 +3,9 @@ import logging
 
 from fastapi.testclient import TestClient
 
-from api import create_app
-from migration import upgrade_database
-from observability import configure_application_logging, log_event, request_context
+from web.api import create_app
+from storage.migration import upgrade_database
+from core.observability import configure_application_logging, log_event, request_context
 
 
 def test_log_event_emits_json_with_bound_request_id(caplog):

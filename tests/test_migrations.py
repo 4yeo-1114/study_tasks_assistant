@@ -4,11 +4,11 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import create_engine, inspect, text
 
-from migration import upgrade_database
+from storage.migration import upgrade_database
 
 
 def test_create_app_does_not_create_schema(tmp_path):
-    from api import create_app
+    from web.api import create_app
 
     url = f"sqlite+pysqlite:///{(tmp_path / 'unmigrated.db').as_posix()}"
     app = create_app(url)

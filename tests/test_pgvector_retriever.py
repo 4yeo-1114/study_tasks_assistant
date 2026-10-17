@@ -2,9 +2,9 @@ from dataclasses import dataclass
 
 import pytest
 
-from embedding_retrieval import VectorSearchResult
-from pgvector_store import PgVectorRetriever
-from rag import DocumentChunk
+from knowledge.embedding_retrieval import VectorSearchResult
+from storage.pgvector_store import PgVectorRetriever
+from knowledge.rag import DocumentChunk
 
 
 class FakeModel:

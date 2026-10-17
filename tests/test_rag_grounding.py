@@ -1,9 +1,9 @@
-from rag import DocumentChunk, KeywordRetriever, SearchResult
+from knowledge.rag import DocumentChunk, KeywordRetriever, SearchResult
 import httpx
 
-from embedding_retrieval import VectorSearchResult
-from deepseek_api import DeepSeekSettings
-from rag_grounding import (
+from knowledge.embedding_retrieval import VectorSearchResult
+from llm.deepseek_api import DeepSeekSettings
+from knowledge.rag_grounding import (
     GroundedAnswer,
     answer_with_evidence,
     generate_grounded_answer_from_retriever,

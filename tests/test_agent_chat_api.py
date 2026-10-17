@@ -1,15 +1,15 @@
 from fastapi.testclient import TestClient
 
-from agent_loop import (
+from agent.agent_loop import (
     AgentAnswer,
     AgentBudgetExceededError,
     AgentState,
     AgentTraceEvent,
 )
-from api import create_app
-from deepseek_tools import ToolCallProposal
-from migration import upgrade_database
-from knowledge_runtime import KnowledgeRuntimeError
+from web.api import create_app
+from llm.deepseek_tools import ToolCallProposal
+from storage.migration import upgrade_database
+from knowledge.knowledge_runtime import KnowledgeRuntimeError
 
 
 def authenticated_client(tmp_path, runner):

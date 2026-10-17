@@ -3,13 +3,13 @@ import json
 import httpx
 import pytest
 
-from auth import AuthService
-from database import Database
-from deepseek_api import DeepSeekSettings
-from deepseek_tools import ToolCallProposal
-from migration import upgrade_database
-from repository import TaskRepository
-from task_proposals import (
+from web.auth import AuthService
+from storage.database import Database
+from llm.deepseek_api import DeepSeekSettings
+from llm.deepseek_tools import ToolCallProposal
+from storage.migration import upgrade_database
+from tasks.repository import TaskRepository
+from tasks.task_proposals import (
     ProposalConflictError,
     ProposalExpiredError,
     ProposalNotFoundError,

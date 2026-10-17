@@ -1,5 +1,5 @@
-from rag import DocumentChunk, KeywordRetriever
-from retrieval_eval import RetrievalEvalCase, evaluate_retriever
+from knowledge.rag import DocumentChunk, KeywordRetriever
+from knowledge.retrieval_eval import RetrievalEvalCase, evaluate_retriever
 
 
 CHUNKS = [

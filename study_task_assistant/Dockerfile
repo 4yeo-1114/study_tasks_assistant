@@ -5,7 +5,14 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY *.py ./
+COPY api.py ./
+COPY web ./web
+COPY agent ./agent
+COPY llm ./llm
+COPY tasks ./tasks
+COPY knowledge ./knowledge
+COPY storage ./storage
+COPY core ./core
 COPY frontend ./frontend
 COPY alembic.ini ./
 COPY migrations ./migrations

@@ -1,12 +1,12 @@
 import json
 
-from retrieval_eval import (
+from knowledge.retrieval_eval import (
     RetrievalTelemetry,
     evaluate_searcher_with_telemetry,
     report_to_json,
     report_to_markdown,
 )
-from rag import DocumentChunk, SearchResult
+from knowledge.rag import DocumentChunk, SearchResult
 
 
 def searcher(query, limit):

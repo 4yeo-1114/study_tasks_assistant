@@ -1,4 +1,4 @@
-from document_ingestion import chunk_text
+from knowledge.document_ingestion import chunk_text
 
 
 def test_chunk_text_creates_numbered_chunks_with_overlap():
