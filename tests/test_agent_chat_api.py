@@ -22,7 +22,6 @@ def authenticated_client(tmp_path, runner):
         settings_factory=lambda: object(),
     )
     client = TestClient(app)
-    client.__enter__()
     client.post("/auth/register", json={
         "username": "alice", "password": "password-123",
     })

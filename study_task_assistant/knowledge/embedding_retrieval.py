@@ -12,6 +12,9 @@ class EmbeddingModel(Protocol):
     def encode(self, text: str) -> Sequence[float]:
         """Encode text into one fixed-dimensional vector."""
 
+    def encode_many(self, texts: Sequence[str]) -> Sequence[Sequence[float]]:
+        """Encode a batch of texts into vectors."""
+
 
 class FastEmbedEmbeddingModel:
     """Real local ONNX embedding adapter without the PyTorch runtime."""
@@ -42,6 +45,12 @@ class FastEmbedEmbeddingModel:
         vector = next(self._model.embed([text]))
         return vector.tolist()
 
+    def encode_many(self, texts: Sequence[str]) -> list[list[float]]:
+        values = list(texts)
+        if not values or any(not text.strip() for text in values):
+            raise ValueError("待编码文本不能为空")
+        return [vector.tolist() for vector in self._model.embed(values)]
+
 
 class SentenceTransformerEmbeddingModel:
     """Real local embedding model adapter backed by sentence-transformers."""
@@ -68,6 +77,13 @@ class SentenceTransformerEmbeddingModel:
             normalize_embeddings=False,
         )
         return vector.tolist()
+
+    def encode_many(self, texts: Sequence[str]) -> list[list[float]]:
+        values = list(texts)
+        if not values or any(not text.strip() for text in values):
+            raise ValueError("待编码文本不能为空")
+        vectors = self._model.encode(values, convert_to_numpy=True, normalize_embeddings=False)
+        return vectors.tolist()
 
 
 @dataclass(frozen=True)
@@ -97,6 +113,7 @@ class VectorIndex:
                     "source": item.chunk.source,
                     "chunk_id": item.chunk.chunk_id,
                     "text": item.chunk.text,
+                    "page_number": item.chunk.page_number,
                     "vector": list(item.vector),
                 }
                 for item in self.chunks
@@ -131,6 +148,7 @@ class VectorIndex:
                     source=raw["source"],
                     chunk_id=raw["chunk_id"],
                     text=raw["text"],
+                    page_number=raw.get("page_number"),
                 )
                 vector = tuple(float(value) for value in raw["vector"])
             except (KeyError, TypeError, ValueError) as exc:

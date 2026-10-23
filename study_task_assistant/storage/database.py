@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 class Database:
     def __init__(self, url: str) -> None:
+        self.url = url
         connect_args = (
             {"check_same_thread": False} if url.startswith("sqlite") else {}
         )

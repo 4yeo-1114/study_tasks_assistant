@@ -51,13 +51,13 @@ def test_pg_keyword_retriever_scopes_rows_in_sql_before_scoring():
 
     assert [item.chunk.source for item in results] == ["strong.md", "weak.md"]
     assert "document_chunks.owner_id = :owner_id" in sessions.session.statement
+    assert "search_vector @@ to_tsquery('simple', :fts_query)" in sessions.session.statement
     assert "documents.state = 'ready'" in sessions.session.statement
     assert "documents.active_version = document_chunks.document_version" in sessions.session.statement
-    assert sessions.session.params == {
-        "owner_id": 7,
-        "source": "strong.md",
-        "document_version": "v2",
-    }
+    assert sessions.session.params["owner_id"] == 7
+    assert sessions.session.params["source"] == "strong.md"
+    assert sessions.session.params["document_version"] == "v2"
+    assert " | " in sessions.session.params["fts_query"]
 
 
 def test_pg_keyword_retriever_returns_no_match_instead_of_unrelated_chunks():

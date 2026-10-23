@@ -1,0 +1,118 @@
+{
+  "runner": "scripts/run_workbench_e2e.py",
+  "runner_sha256": "a46f7c29dd8f8ea3666d37665ad9b755c8151addca00bc398978072521ed65b9",
+  "started_at": "20261023T041247476011Z",
+  "app": {
+    "database": "独立临时 SQLite",
+    "llm": "本地桩模型（离线）",
+    "rag": "disabled",
+    "browser": "msedge 156.0.4314.42"
+  },
+  "accounts": [
+    "e2e_user_a_121247",
+    "e2e_user_b_121247"
+  ],
+  "git": {
+    "head": "e92c8d8ac91bd704485d7fb1ef9c3e9fd3fb4880",
+    "dirty_files": 74
+  },
+  "scenarios": [
+    {
+      "id": "S1",
+      "status": "error",
+      "seconds": 0.0
+    },
+    {
+      "id": "S2",
+      "status": "error",
+      "seconds": 30.01
+    },
+    {
+      "id": "S3",
+      "status": "error",
+      "seconds": 30.01
+    },
+    {
+      "id": "S4",
+      "status": "error",
+      "seconds": 30.0
+    },
+    {
+      "id": "S5",
+      "status": "error",
+      "seconds": 30.0
+    },
+    {
+      "id": "S6",
+      "status": "error",
+      "seconds": 0.13
+    },
+    {
+      "id": "S7",
+      "status": "error",
+      "seconds": 30.01
+    },
+    {
+      "id": "S8",
+      "status": "error",
+      "seconds": 0.16
+    }
+  ],
+  "checks_total": 8,
+  "checks_pass": 0,
+  "checks_fail": 8,
+  "checks": [
+    {
+      "name": "S1 场景异常",
+      "pass": false,
+      "detail": "NameError: name 'APP' is not defined",
+      "finding": false
+    },
+    {
+      "name": "S2 场景异常",
+      "pass": false,
+      "detail": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-view=\\\"tasks\\\"]\").first\n",
+      "finding": false
+    },
+    {
+      "name": "S3 场景异常",
+      "pass": false,
+      "detail": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-view=\\\"fitness\\\"]\").first\n",
+      "finding": false
+    },
+    {
+      "name": "S4 场景异常",
+      "pass": false,
+      "detail": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-view=\\\"planning\\\"]\").first\n",
+      "finding": false
+    },
+    {
+      "name": "S5 场景异常",
+      "pass": false,
+      "detail": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-view=\\\"agent\\\"]\").first\n",
+      "finding": false
+    },
+    {
+      "name": "S6 场景异常",
+      "pass": false,
+      "detail": "NameError: name 'APP' is not defined",
+      "finding": false
+    },
+    {
+      "name": "S7 场景异常",
+      "pass": false,
+      "detail": "TimeoutError: Locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"[data-view=\\\"tasks\\\"]\").first\n",
+      "finding": false
+    },
+    {
+      "name": "S8 场景异常",
+      "pass": false,
+      "detail": "NameError: name 'APP' is not defined",
+      "finding": false
+    }
+  ],
+  "findings": [],
+  "console_errors": [],
+  "page_errors": [],
+  "stub_llm_requests": 0
+}

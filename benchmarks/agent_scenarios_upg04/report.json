@@ -1,0 +1,321 @@
+{
+  "suite": "UPG-04 deterministic Agent acceptance",
+  "test_file": "tests\\test_agent_scenario_suite.py",
+  "source_sha256": {
+    "tests\\test_agent_scenario_suite.py": "dc551ed5c1205c58ec9b029cc115ac314d0f697077a9833bd6e2f8f29bb3e4a4",
+    "study_task_assistant\\agent\\agent_loop.py": "3945effd223a926bf0e8afdc84d93101d47717e819b3f8ffb31d78b6f0dd52f0",
+    "study_task_assistant\\web\\api.py": "e4f3d04e8d539dee65b04e2274f121daec2ac2be195dd7a5b4b5a606b8ec943a",
+    "study_task_assistant\\web\\schemas.py": "a5ec33ea6482cbd5a2d020fc6bb04979f7e64c8dd8cc2d74dcf5223d765f2444",
+    "study_task_assistant\\weekly_plans\\service.py": "ef6ca5b5ca2c77f499936c2379d5ca6da839d3e4d66e7b815a7852b87aa34489",
+    "study_task_assistant\\agent\\session_store.py": "76d694e54879b1c0c6e74316f3b1336546fe9d545315208185f9be7bfdbfbe56"
+  },
+  "git_head": "e92c8d8ac91bd704485d7fb1ef9c3e9fd3fb4880",
+  "working_tree_dirty": true,
+  "generated_at": "2026-10-22T09:44:07.619343+00:00",
+  "command": "D:\\dev-learning\\.venv\\Scripts\\python.exe -m pytest -q D:\\dev-learning\\tests\\test_agent_scenario_suite.py --junitxml=D:\\dev-learning\\benchmarks\\agent_scenarios_upg04\\junit.xml",
+  "exit_code": 0,
+  "counts": {
+    "passed": 72,
+    "failed": 0,
+    "error": 0,
+    "skipped": 0
+  },
+  "cases": [
+    {
+      "name": "test_agent_acceptance_scenario[auth_profile_read]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[auth_profile_write]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[auth_session_read]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[auth_chat]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[auth_plan_create]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[auth_task_read]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_-1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_0]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_2]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_3]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_4]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_5]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_6]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_7]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_days_8]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_learning_goal_blank]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_learning_goal_too_long]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_preferences_blank]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_preferences_too_long]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_limitations_blank]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[profile_text_limitations_too_long]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_0]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_2]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_3]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_4]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_5]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_weekday_6]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_-1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_0]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_5]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_6]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[calendar_offset_7]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_60]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_89]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_90]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_91]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_120]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_1440]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[daily_budget_1441]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_0]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_1]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_2]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_3]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_4]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_5]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_6]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[fitness_days_7]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_first_confirm]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_repeat_confirm]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_reject_then_confirm]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_confirm_then_reject]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_other_owner_read]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_other_owner_confirm]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_stale_profile]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_stale_plan]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_missing_profile]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[confirm_state_missing_plan]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_forbidden_tool]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_model_user_id]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_retry_once]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_retry_exhausted]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_step_limit_before_tool]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_step_limit_after_tool]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_tool_budget]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_duplicate_call_id]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_boolean_identity]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_acceptance_scenario[agent_control_zero_identity]",
+      "result": "passed"
+    },
+    {
+      "name": "test_agent_scenario_dataset_has_required_coverage",
+      "result": "passed"
+    }
+  ],
+  "environment": {
+    "python": "3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)]",
+    "database": "SQLite test database"
+  },
+  "limitations": [
+    "SQLite behavior only; PostgreSQL checkpoint and concurrent confirmation require Docker.",
+    "Model responses are deterministic MockTransport fixtures, not online quality or cost evidence."
+  ]
+}

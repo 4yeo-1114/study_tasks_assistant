@@ -10,6 +10,8 @@ COPY web ./web
 COPY agent ./agent
 COPY llm ./llm
 COPY tasks ./tasks
+COPY fitness ./fitness
+COPY user_profile ./user_profile
 COPY knowledge ./knowledge
 COPY storage ./storage
 COPY core ./core

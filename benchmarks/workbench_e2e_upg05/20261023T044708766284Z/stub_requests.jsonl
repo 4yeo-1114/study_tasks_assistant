@@ -1,0 +1,8 @@
+{"roles": ["system", "user"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "tool"], "model": "e2e-stub-model"}
+{"roles": ["system", "user"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "tool"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "user"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "user", "assistant", "tool"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "user", "assistant", "user"], "model": "e2e-stub-model"}
+{"roles": ["system", "user", "assistant", "user", "assistant", "user", "assistant", "tool"], "model": "e2e-stub-model"}

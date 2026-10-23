@@ -11,6 +11,7 @@ class DocumentChunk:
     source: str
     chunk_id: int
     text: str
+    page_number: int | None = None
 
     def __post_init__(self) -> None:
         if not self.source.strip():
@@ -32,7 +33,8 @@ def tokenize(text: str) -> set[str]:
     tokens = {match.group(0).lower() for match in _WORD_PATTERN.finditer(text)}
     for match in _CJK_PATTERN.finditer(text):
         run = match.group(0)
-        tokens.update(run[index:index + 2] for index in range(0, len(run) - 1, 2))
+        # Overlap adjacent bigrams so a query can start at any character boundary.
+        tokens.update(run[index:index + 2] for index in range(0, len(run) - 1))
     return tokens
 
 
@@ -74,5 +76,8 @@ def build_context(results: list[SearchResult] | list[DocumentChunk]) -> str:
         # Keyword and vector retrievers both expose ``.chunk``; keep the
         # context builder independent of the concrete score/result class.
         chunk = item.chunk if hasattr(item, "chunk") else item
-        lines.append(f"[来源: {chunk.source}#{chunk.chunk_id}]\n{chunk.text}")
+        provenance = f"{chunk.source}#{chunk.chunk_id}"
+        if chunk.page_number is not None:
+            provenance += f" (第{chunk.page_number}页)"
+        lines.append(f"[来源: {provenance}]\n{chunk.text}")
     return "\n\n".join(lines)

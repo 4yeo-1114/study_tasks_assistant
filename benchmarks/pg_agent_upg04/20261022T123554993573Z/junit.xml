@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="9" time="37.446" timestamp="2026-10-22T20:36:14.570860+08:00" hostname="DESKTOP-IUP6J4F"><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_checkpoint_interrupt_survives_connection_reopen" time="2.991" /><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_confirmation_row_lock_prevents_duplicate_or_stale_writes[repeat-confirm]" time="2.735" /><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_confirmation_row_lock_prevents_duplicate_or_stale_writes[version-race]" time="2.719" /><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_confirmation_failure_rolls_back_whole_batch_and_resume_retries" time="2.655" /><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_concurrent_adjustment_reuses_one_proposal" time="2.524" /><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_concurrent_weekly_create_reuses_same_idempotency_key" time="2.265"><failure message="sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint &quot;uq_weekly_plans_owner_idempotency_key&quot;&#10;DETAIL:  Key (owner_id, idempotency_key)=(1, pg-create-race) already exists.&#10;[SQL: INSERT INTO weekly_plans (id, owner_id, week_start, expected_profile_revision, base_plan_version, idempotency_key, payload_hash, task_snapshot, status, plan_version, task_ids, plan_kind, source_plan_id, adjustment_summary, created_at) VALUES (%(id)s::VARCHAR, %(owner_id)s::INTEGER, %(week_start)s::DATE, %(expected_profile_revision)s::INTEGER, %(base_plan_version)s::INTEGER, %(idempotency_key)s::VARCHAR, %(payload_hash)s::VARCHAR, %(task_snapshot)s::JSON, %(status)s::VARCHAR, %(plan_version)s::INTEGER, %(task_ids)s::JSON, %(plan_kind)s::VARCHAR, %(source_plan_id)s::VARCHAR, %(adjustment_summary)s::VARCHAR, %(created_at)s::TIMESTAMP WITHOUT TIME ZONE)]&#10;[parameters: {'id': 'e2ac4374f7f794dc8da9f30277054ed2', 'owner_id': 1, 'week_start': datetime.date(2026, 10, 26), 'expected_profile_revision': 1, 'base_plan_version': 0, 'idempotency_key': 'pg-create-race', 'payload_hash': 'e3a6b6d9d532c5ff565a3b6c67589d959a06bfbf3920990e42a57b5be8cd2bd6', 'task_snapshot': Json([{'title': '阅读检索设计', 'task_type': ' ... (325 chars)), 'status': 'pending', 'plan_version': None, 'task_ids': Json([]), 'plan_kind': 'weekly', 'source_plan_id': None, 'adjustment_summary': None, 'created_at': datetime.datetime(2026, 10, 22, 12, 36, 41, 190716)}]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">.venv\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+.venv\lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "uq_weekly_plans_owner_idempotency_key"
+E   DETAIL:  Key (owner_id, idempotency_key)=(1, pg-create-race) already exists.
+
+The above exception was the direct cause of the following exception:
+tests\test_postgres_agent_runtime.py:152: in test_postgres_concurrent_weekly_create_reuses_same_idempotency_key
+    plans = list(pool.map(create, range(2)))
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:621: in result_iterator
+    yield _result_or_cancel(fs.pop())
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:319: in _result_or_cancel
+    return fut.result(timeout)
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:458: in result
+    return self.__get_result()
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:403: in __get_result
+    raise self._exception
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+tests\test_postgres_agent_runtime.py:148: in create
+    return service.create(1, request)
+study_task_assistant\weekly_plans\service.py:85: in create
+    session.flush()
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+.venv\lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+.venv\lib\site-packages\sqlalchemy\orm\unitofwork.py:465: in execute
+    rec.execute(self)
+.venv\lib\site-packages\sqlalchemy\orm\unitofwork.py:641: in execute
+    util.preloaded.orm_persistence.save_obj(
+.venv\lib\site-packages\sqlalchemy\orm\persistence.py:94: in save_obj
+    _emit_insert_statements(
+.venv\lib\site-packages\sqlalchemy\orm\persistence.py:1049: in _emit_insert_statements
+    result = connection.execute(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1848: in _execute_context
+    return self._exec_single_context(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1988: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1969: in _exec_single_context
+    self.dialect.do_execute(
+.venv\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+.venv\lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "uq_weekly_plans_owner_idempotency_key"
+E   DETAIL:  Key (owner_id, idempotency_key)=(1, pg-create-race) already exists.
+E   [SQL: INSERT INTO weekly_plans (id, owner_id, week_start, expected_profile_revision, base_plan_version, idempotency_key, payload_hash, task_snapshot, status, plan_version, task_ids, plan_kind, source_plan_id, adjustment_summary, created_at) VALUES (%(id)s::VARCHAR, %(owner_id)s::INTEGER, %(week_start)s::DATE, %(expected_profile_revision)s::INTEGER, %(base_plan_version)s::INTEGER, %(idempotency_key)s::VARCHAR, %(payload_hash)s::VARCHAR, %(task_snapshot)s::JSON, %(status)s::VARCHAR, %(plan_version)s::INTEGER, %(task_ids)s::JSON, %(plan_kind)s::VARCHAR, %(source_plan_id)s::VARCHAR, %(adjustment_summary)s::VARCHAR, %(created_at)s::TIMESTAMP WITHOUT TIME ZONE)]
+E   [parameters: {'id': 'e2ac4374f7f794dc8da9f30277054ed2', 'owner_id': 1, 'week_start': datetime.date(2026, 10, 26), 'expected_profile_revision': 1, 'base_plan_version': 0, 'idempotency_key': 'pg-create-race', 'payload_hash': 'e3a6b6d9d532c5ff565a3b6c67589d959a06bfbf3920990e42a57b5be8cd2bd6', 'task_snapshot': Json([{'title': '阅读检索设计', 'task_type': ' ... (325 chars)), 'status': 'pending', 'plan_version': None, 'task_ids': Json([]), 'plan_kind': 'weekly', 'source_plan_id': None, 'adjustment_summary': None, 'created_at': datetime.datetime(2026, 10, 22, 12, 36, 41, 190716)}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.test_postgres_agent_runtime" name="test_postgres_concurrent_run_completion_allocates_distinct_message_sequences" time="2.075"><failure message="sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint &quot;uq_agent_messages_session_sequence&quot;&#10;DETAIL:  Key (session_id, sequence)=(15b4075d2d9e41618f0bf8c8effcd8e5, 1) already exists.&#10;[SQL: INSERT INTO agent_messages (session_id, sequence, role, content, created_at) SELECT p0::VARCHAR, p1::INTEGER, p2::VARCHAR, p3::VARCHAR, p4::TIMESTAMP WITHOUT TIME ZONE FROM (VALUES (%(session_id__0)s::VARCHAR, %(sequence__0)s::INTEGER, %(role__0)s::V ... 259 characters truncated ... 2, p3, p4, sen_counter) ORDER BY sen_counter RETURNING agent_messages.id, agent_messages.id AS id__1]&#10;[parameters: {'sequence__0': 1, 'role__0': 'user', 'session_id__0': '15b4075d2d9e41618f0bf8c8effcd8e5', 'content__0': 'q0', 'created_at__0': datetime.datetime(2026, 10, 22, 12, 36, 47, 840878), 'sequence__1': 2, 'role__1': 'assistant', 'session_id__1': '15b4075d2d9e41618f0bf8c8effcd8e5', 'content__1': 'a0', 'created_at__1': datetime.datetime(2026, 10, 22, 12, 36, 47, 840878)}]&#10;(Background on this error at: https://sqlalche.me/e/20/gkpj)">.venv\lib\site-packages\sqlalchemy\engine\base.py:2127: in _exec_insertmany_context
+    dialect.do_execute(
+.venv\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+.venv\lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "uq_agent_messages_session_sequence"
+E   DETAIL:  Key (session_id, sequence)=(15b4075d2d9e41618f0bf8c8effcd8e5, 1) already exists.
+
+The above exception was the direct cause of the following exception:
+tests\test_postgres_agent_runtime.py:182: in test_postgres_concurrent_run_completion_allocates_distinct_message_sequences
+    list(pool.map(complete, range(2)))
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:621: in result_iterator
+    yield _result_or_cancel(fs.pop())
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:319: in _result_or_cancel
+    return fut.result(timeout)
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:458: in result
+    return self.__get_result()
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\_base.py:403: in __get_result
+    raise self._exception
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\concurrent\futures\thread.py:58: in run
+    result = self.fn(*self.args, **self.kwargs)
+tests\test_postgres_agent_runtime.py:177: in complete
+    sessions.complete_run(1, conversation["id"], runs[index]["id"], f"q{index}",
+study_task_assistant\agent\session_store.py:72: in complete_run
+    with self._sessions.begin() as session:
+C:\Users\zzq\AppData\Local\Python\pythoncore-3.10-64\lib\contextlib.py:142: in __exit__
+    next(self.gen)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:1819: in _maker_context_manager
+    with self.begin():
+.venv\lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+.venv\lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+&lt;string&gt;:2: in commit
+    ???
+.venv\lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:1316: in commit
+    self._prepare_impl()
+&lt;string&gt;:2: in _prepare_impl
+    ???
+.venv\lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:1290: in _prepare_impl
+    self.session.flush()
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4353: in flush
+    self._flush(objects)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4488: in _flush
+    with util.safe_reraise():
+.venv\lib\site-packages\sqlalchemy\util\langhelpers.py:122: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\lib\site-packages\sqlalchemy\orm\session.py:4449: in _flush
+    flush_context.execute()
+.venv\lib\site-packages\sqlalchemy\orm\unitofwork.py:465: in execute
+    rec.execute(self)
+.venv\lib\site-packages\sqlalchemy\orm\unitofwork.py:641: in execute
+    util.preloaded.orm_persistence.save_obj(
+.venv\lib\site-packages\sqlalchemy\orm\persistence.py:94: in save_obj
+    _emit_insert_statements(
+.venv\lib\site-packages\sqlalchemy\orm\persistence.py:1144: in _emit_insert_statements
+    result = connection.execute(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1421: in execute
+    return meth(
+.venv\lib\site-packages\sqlalchemy\sql\elements.py:526: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1643: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_insertmany_context(dialect, context)
+.venv\lib\site-packages\sqlalchemy\engine\base.py:2135: in _exec_insertmany_context
+    self._handle_dbapi_exception(
+.venv\lib\site-packages\sqlalchemy\engine\base.py:2365: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\lib\site-packages\sqlalchemy\engine\base.py:2127: in _exec_insertmany_context
+    dialect.do_execute(
+.venv\lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+.venv\lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "uq_agent_messages_session_sequence"
+E   DETAIL:  Key (session_id, sequence)=(15b4075d2d9e41618f0bf8c8effcd8e5, 1) already exists.
+E   [SQL: INSERT INTO agent_messages (session_id, sequence, role, content, created_at) SELECT p0::VARCHAR, p1::INTEGER, p2::VARCHAR, p3::VARCHAR, p4::TIMESTAMP WITHOUT TIME ZONE FROM (VALUES (%(session_id__0)s::VARCHAR, %(sequence__0)s::INTEGER, %(role__0)s::V ... 259 characters truncated ... 2, p3, p4, sen_counter) ORDER BY sen_counter RETURNING agent_messages.id, agent_messages.id AS id__1]
+E   [parameters: {'sequence__0': 1, 'role__0': 'user', 'session_id__0': '15b4075d2d9e41618f0bf8c8effcd8e5', 'content__0': 'q0', 'created_at__0': datetime.datetime(2026, 10, 22, 12, 36, 47, 840878), 'sequence__1': 2, 'role__1': 'assistant', 'session_id__1': '15b4075d2d9e41618f0bf8c8effcd8e5', 'content__1': 'a0', 'created_at__1': datetime.datetime(2026, 10, 22, 12, 36, 47, 840878)}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)</failure></testcase><testcase classname="tests.test_postgres_integration" name="test_postgres_repository_round_trip" time="1.015" /><testcase classname="tests.test_postgres_integration" name="test_postgres_upg03_full_text_columns_and_page_provenance" time="0.982" /></testsuite></testsuites>

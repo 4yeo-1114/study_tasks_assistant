@@ -71,7 +71,7 @@ class ScopedKeywordRetriever:
 
 
 class PgKeywordRetriever:
-    """Read the current user's active chunks from PostgreSQL, then score terms."""
+    """Use PostgreSQL FTS to bound candidates, then apply deterministic scoring."""
 
     def __init__(self, sessions: Any) -> None:
         self._sessions = sessions
@@ -104,6 +104,14 @@ class PgKeywordRetriever:
             "documents.active_version = document_chunks.document_version",
         ]
         params: dict[str, object] = {"owner_id": filters.owner_id}
+        query_tokens = tokenize(query)
+        if not query_tokens:
+            return []
+        # The final score counts any shared token. Use OR here so the indexed
+        # candidate filter cannot discard a chunk merely because it lacks an
+        # unrelated query token; tokens come only from tokenize(), not raw SQL.
+        params["fts_query"] = " | ".join(sorted(query_tokens))
+        conditions.append("document_chunks.search_vector @@ to_tsquery('simple', :fts_query)")
         if filters.source is not None:
             conditions.append("document_chunks.source = :source")
             params["source"] = filters.source
@@ -115,23 +123,25 @@ class PgKeywordRetriever:
             rows = session.execute(
                 text(f"""
                 SELECT document_chunks.source, document_chunks.chunk_id,
-                       document_chunks.content
+                       document_chunks.content, document_chunks.page_number,
+                       ts_rank_cd(document_chunks.search_vector,
+                                  to_tsquery('simple', :fts_query)) AS rank
                 FROM document_chunks
                 JOIN documents
                   ON documents.owner_id = document_chunks.owner_id
                  AND documents.source = document_chunks.source
                  AND documents.document_version = document_chunks.document_version
                 WHERE {" AND ".join(conditions)}
-                ORDER BY document_chunks.source, document_chunks.chunk_id
+                ORDER BY rank DESC, document_chunks.source, document_chunks.chunk_id
+                LIMIT :candidate_limit
                 """),
-                params,
+                {**params, "candidate_limit": max(limit * 4, limit)},
             )
 
-            query_terms = tokenize(query)
             matches: list[tuple[int, int, SearchResult]] = []
             for position, row in enumerate(rows):
-                chunk = DocumentChunk(row.source, row.chunk_id, row.content)
-                score = len(query_terms & tokenize(chunk.text))
+                chunk = DocumentChunk(row.source, row.chunk_id, row.content, getattr(row, "page_number", None))
+                score = len(query_tokens & tokenize(chunk.text))
                 if score >= min_score:
                     matches.append((score, position, SearchResult(chunk, score)))
 

@@ -1,0 +1,576 @@
+{
+  "runner": "scripts/run_workbench_e2e.py",
+  "runner_sha256": "b14599aff431685059aea9a3015b95b05a4534444442b3f6de8c0541b9c180f8",
+  "started_at": "20261023T042724363187Z",
+  "app": {
+    "database": "独立临时 SQLite",
+    "llm": "本地桩模型（离线）",
+    "rag": "disabled",
+    "browser": "msedge 156.0.4314.42"
+  },
+  "accounts": [
+    "e2e_user_a_122724",
+    "e2e_user_b_122724"
+  ],
+  "git": {
+    "head": "e92c8d8ac91bd704485d7fb1ef9c3e9fd3fb4880",
+    "dirty_files": 74
+  },
+  "scenarios": [
+    {
+      "id": "S1",
+      "status": "ok",
+      "seconds": 0.98
+    },
+    {
+      "id": "S2",
+      "status": "ok",
+      "seconds": 8.58
+    },
+    {
+      "id": "S3",
+      "status": "ok",
+      "seconds": 1.01
+    },
+    {
+      "id": "S4",
+      "status": "ok",
+      "seconds": 0.68
+    },
+    {
+      "id": "S5",
+      "status": "ok",
+      "seconds": 0.53
+    },
+    {
+      "id": "S6",
+      "status": "ok",
+      "seconds": 0.83
+    },
+    {
+      "id": "S7",
+      "status": "ok",
+      "seconds": 19.89
+    },
+    {
+      "id": "S8",
+      "status": "ok",
+      "seconds": 5.24
+    }
+  ],
+  "checks_total": 76,
+  "checks_pass": 72,
+  "checks_fail": 4,
+  "checks": [
+    {
+      "name": "S1 应用壳可见",
+      "pass": true,
+      "detail": "登录后工作台显示",
+      "finding": false
+    },
+    {
+      "name": "S1 四项指标已加载",
+      "pass": true,
+      "detail": "指标区已渲染",
+      "finding": false
+    },
+    {
+      "name": "S1 导航六个视图",
+      "pass": true,
+      "detail": "导航项数=6",
+      "finding": false
+    },
+    {
+      "name": "S1 今日日期标签",
+      "pass": true,
+      "detail": "today=2026年10月23日周五",
+      "finding": false
+    },
+    {
+      "name": "S1 GET /tasks 200",
+      "pass": true,
+      "detail": "任务接口 200",
+      "finding": false
+    },
+    {
+      "name": "S1 GET /plans 200",
+      "pass": true,
+      "detail": "计划接口 200",
+      "finding": false
+    },
+    {
+      "name": "S1 GET /fitness/progress 200",
+      "pass": true,
+      "detail": "健身接口 200",
+      "finding": false
+    },
+    {
+      "name": "S2 新任务出现在列表",
+      "pass": true,
+      "detail": "列表含新任务",
+      "finding": false
+    },
+    {
+      "name": "S2 POST /tasks 201",
+      "pass": true,
+      "detail": "创建接口 201",
+      "finding": false
+    },
+    {
+      "name": "S2 任务显示已完成与实际用时",
+      "pass": false,
+      "detail": "完成状态与实际用时渲染",
+      "finding": true
+    },
+    {
+      "name": "S2 PATCH /tasks/{id} 200",
+      "pass": true,
+      "detail": "状态更新接口 200",
+      "finding": false
+    },
+    {
+      "name": "S2 进度 1/1 与完成率 100%",
+      "pass": true,
+      "detail": "进度=1/1 已完成 · 预计 0 分钟 · 实际 0 分钟",
+      "finding": false
+    },
+    {
+      "name": "S2 总览待办 0、完成率 100%",
+      "pass": true,
+      "detail": "pending=0, completion=完成率 100%",
+      "finding": false
+    },
+    {
+      "name": "S2 后端任务落库（含实际用时）",
+      "pass": false,
+      "detail": "tasks 表实际值=[('completed', None)]（预期 completed+45；任务视图填写的实际分钟被总览隐藏副本覆盖则丢失）",
+      "finding": true
+    },
+    {
+      "name": "S3a 无记录：训练画布全透明",
+      "pass": true,
+      "detail": "nonTransparent=0/115000 css=605x278 pixel=500x230 attrH=230 dpr=1",
+      "finding": false
+    },
+    {
+      "name": "S3a 无记录：空状态提示可见",
+      "pass": true,
+      "detail": "空状态显示",
+      "finding": false
+    },
+    {
+      "name": "S3 训练后个人纪录更新",
+      "pass": true,
+      "detail": "PR 深蹲 60 kg",
+      "finding": false
+    },
+    {
+      "name": "S3a 单条记录：训练画布非空",
+      "pass": true,
+      "detail": "nonTransparent=8417 css=605x230 pixel=605x230 dpr=1",
+      "finding": false
+    },
+    {
+      "name": "S3a 多条记录：训练画布非空",
+      "pass": true,
+      "detail": "nonTransparent=13641",
+      "finding": false
+    },
+    {
+      "name": "S3 累计训练量 700 kg",
+      "pass": true,
+      "detail": "volume=700 kg",
+      "finding": false
+    },
+    {
+      "name": "S3 动作纪录 60 kg（深蹲）",
+      "pass": true,
+      "detail": "最高重量为深蹲 60 kg",
+      "finding": false
+    },
+    {
+      "name": "S3a 单条体重：趋势画布非空且空状态隐藏",
+      "pass": true,
+      "detail": "体重图已绘制",
+      "finding": false
+    },
+    {
+      "name": "S3a 两条体重：趋势画布非空",
+      "pass": true,
+      "detail": "nonTransparent=12896",
+      "finding": false
+    },
+    {
+      "name": "S3 API 聚合正确",
+      "pass": true,
+      "detail": "volume={'深蹲': 300, '卧推': 400} pr={'深蹲': 60, '卧推': 40} weekly={'2026-W43': 70.5, '2026-W44': 71.5}",
+      "finding": false
+    },
+    {
+      "name": "S4 档案保存后版本为 1",
+      "pass": true,
+      "detail": "revision=档案版本 1 · 已确认计划版本 0",
+      "finding": false
+    },
+    {
+      "name": "S4 PUT /profile 200",
+      "pass": true,
+      "detail": "档案接口 200",
+      "finding": false
+    },
+    {
+      "name": "S4 计划显示待确认",
+      "pass": true,
+      "detail": "plan-list=周计划 · 10月19日周一待确认初始计划1 个计划项 · 第 待确认 版确认拒绝",
+      "finding": false
+    },
+    {
+      "name": "S4 POST /plans/weekly 201",
+      "pass": true,
+      "detail": "提案接口 201",
+      "finding": false
+    },
+    {
+      "name": "S4 后端计划为 pending",
+      "pass": true,
+      "detail": "plan_id=b33a884748e5986dd4c0d6a038f8809d",
+      "finding": false
+    },
+    {
+      "name": "S4 总览待确认计划 1",
+      "pass": true,
+      "detail": "metric-plans=1",
+      "finding": false
+    },
+    {
+      "name": "S4 确认后计划状态变化",
+      "pass": true,
+      "detail": "计划行显示已确认",
+      "finding": false
+    },
+    {
+      "name": "S4 POST /plans/{id}/confirm 200",
+      "pass": true,
+      "detail": "确认接口 200",
+      "finding": false
+    },
+    {
+      "name": "S4 后端计划 confirmed",
+      "pass": true,
+      "detail": "DB confirmed",
+      "finding": false
+    },
+    {
+      "name": "S4 任务列表出现计划项",
+      "pass": true,
+      "detail": "任务列表含计划任务",
+      "finding": false
+    },
+    {
+      "name": "S4 计划任务落库",
+      "pass": true,
+      "detail": "tasks 表 1 行",
+      "finding": false
+    },
+    {
+      "name": "S5 对话出现用户与 Agent 消息",
+      "pass": true,
+      "detail": "历史消息渲染",
+      "finding": false
+    },
+    {
+      "name": "S5 会话 ID 已持久化",
+      "pass": true,
+      "detail": "session_id=dbb49408d69e4265b16d07c207c9f377",
+      "finding": false
+    },
+    {
+      "name": "S5 后端两条消息一条运行",
+      "pass": true,
+      "detail": "messages=2, runs=1",
+      "finding": false
+    },
+    {
+      "name": "S5 重载后历史消息恢复",
+      "pass": true,
+      "detail": "重载后按 localStorage 会话恢复历史",
+      "finding": false
+    },
+    {
+      "name": "S5 新会话清空对话区",
+      "pass": true,
+      "detail": "空会话提示",
+      "finding": false
+    },
+    {
+      "name": "S6 B 账号计划列表为空",
+      "pass": true,
+      "detail": "plan-list=没有计划版本",
+      "finding": false
+    },
+    {
+      "name": "S6 B 账号任务列表为空",
+      "pass": true,
+      "detail": "无 A 的任务",
+      "finding": false
+    },
+    {
+      "name": "S6 B 账号无会话消息",
+      "pass": true,
+      "detail": "无 A 的会话",
+      "finding": false
+    },
+    {
+      "name": "S6 跨账号会话 404",
+      "pass": true,
+      "detail": "status=404",
+      "finding": false
+    },
+    {
+      "name": "S6 跨账号计划 404",
+      "pass": true,
+      "detail": "status=404",
+      "finding": false
+    },
+    {
+      "name": "S7a 前置：任务面板有内容",
+      "pass": true,
+      "detail": "",
+      "finding": false
+    },
+    {
+      "name": "S7a 前置：计划面板有内容",
+      "pass": true,
+      "detail": "",
+      "finding": false
+    },
+    {
+      "name": "S7a 健身 503：页面给出可读错误",
+      "pass": true,
+      "detail": "toast=健身服务不可用（503）",
+      "finding": false
+    },
+    {
+      "name": "S7a 健身 503：任务面板仍显示",
+      "pass": true,
+      "detail": "任务内容保留",
+      "finding": false
+    },
+    {
+      "name": "S7a 健身 503：计划面板仍显示",
+      "pass": true,
+      "detail": "计划内容保留",
+      "finding": false
+    },
+    {
+      "name": "S7a 解除后刷新恢复（700→850 kg）",
+      "pass": true,
+      "detail": "volume=850 kg",
+      "finding": false
+    },
+    {
+      "name": "S7b 计划 500：页面显示错误",
+      "pass": true,
+      "detail": "toast=计划服务暂时不可用（500）",
+      "finding": false
+    },
+    {
+      "name": "S7b 再次刷新：计划接口恢复 200",
+      "pass": false,
+      "detail": "calls={'n': 2} entries=[200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 500] failed=[] plans_before=15 new_status=None",
+      "finding": false
+    },
+    {
+      "name": "S7b 计划数据恢复显示",
+      "pass": true,
+      "detail": "计划行恢复",
+      "finding": false
+    },
+    {
+      "name": "S7c 聊天 502：可读错误显示",
+      "pass": true,
+      "detail": "chat-status=网关错误（502）",
+      "finding": false
+    },
+    {
+      "name": "S7c 聊天 502：输入内容保留",
+      "pass": true,
+      "detail": "输入框未被清空",
+      "finding": false
+    },
+    {
+      "name": "S7c 重试成功：新消息可见",
+      "pass": true,
+      "detail": "重试为真实新请求",
+      "finding": false
+    },
+    {
+      "name": "S7c 失败请求未产生业务写入",
+      "pass": true,
+      "detail": "messages 2 -> 4（预期 +2）",
+      "finding": false
+    },
+    {
+      "name": "S7d 请求期间提交按钮禁用",
+      "pass": false,
+      "detail": "第二次提交事件时按钮 disabled=False（采样=[False, False]）",
+      "finding": true
+    },
+    {
+      "name": "S7d 恢复后只发生一次业务写入",
+      "pass": true,
+      "detail": "messages 4 -> 6（预期 +2，实际 +2）",
+      "finding": true
+    },
+    {
+      "name": "S8 手机 overview：页面无横向溢出",
+      "pass": true,
+      "detail": "scrollWidth=390 innerWidth=390",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 overview：导航可横向滚动",
+      "pass": true,
+      "detail": "scroll=448 client=366",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 overview：卡片无重叠",
+      "pass": true,
+      "detail": "overlaps=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 overview：表单控件未溢出",
+      "pass": true,
+      "detail": "issues=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 tasks：页面无横向溢出",
+      "pass": true,
+      "detail": "scrollWidth=390 innerWidth=390",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 tasks：导航可横向滚动",
+      "pass": true,
+      "detail": "scroll=447 client=366",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 tasks：卡片无重叠",
+      "pass": true,
+      "detail": "overlaps=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 tasks：表单控件未溢出",
+      "pass": true,
+      "detail": "issues=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 fitness：页面无横向溢出",
+      "pass": true,
+      "detail": "scrollWidth=390 innerWidth=390",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 fitness：导航可横向滚动",
+      "pass": true,
+      "detail": "scroll=451 client=366",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 fitness：卡片无重叠",
+      "pass": true,
+      "detail": "overlaps=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 fitness：表单控件未溢出",
+      "pass": true,
+      "detail": "issues=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 planning：页面无横向溢出",
+      "pass": true,
+      "detail": "scrollWidth=390 innerWidth=390",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 planning：导航可横向滚动",
+      "pass": true,
+      "detail": "scroll=448 client=366",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 planning：卡片无重叠",
+      "pass": true,
+      "detail": "overlaps=[]",
+      "finding": false
+    },
+    {
+      "name": "S8 手机 planning：表单控件未溢出",
+      "pass": true,
+      "detail": "issues=[]",
+      "finding": false
+    }
+  ],
+  "findings": [
+    {
+      "name": "S2 任务显示已完成与实际用时",
+      "pass": false,
+      "detail": "完成状态与实际用时渲染",
+      "finding": true
+    },
+    {
+      "name": "S2 后端任务落库（含实际用时）",
+      "pass": false,
+      "detail": "tasks 表实际值=[('completed', None)]（预期 completed+45；任务视图填写的实际分钟被总览隐藏副本覆盖则丢失）",
+      "finding": true
+    },
+    {
+      "name": "S7d 请求期间提交按钮禁用",
+      "pass": false,
+      "detail": "第二次提交事件时按钮 disabled=False（采样=[False, False]）",
+      "finding": true
+    }
+  ],
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ],
+  "page_errors": [],
+  "stub_llm_requests": 8
+}

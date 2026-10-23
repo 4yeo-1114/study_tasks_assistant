@@ -25,7 +25,7 @@ def test_legacy_sqlite_rows_are_preserved_and_dates_normalized(tmp_path):
         ).fetchone() == (7, "旧任务", "pending", "low", "2026-09-10")
         assert connection.execute(
             "SELECT version_num FROM alembic_version"
-                ).fetchone() == ("0008_task_proposal_idempotency",)
+            ).fetchone() == ("0017_agent_message_sequence",)
 
     backup = tmp_path / "tasks-pre-alembic.db"
     with closing(sqlite3.connect(backup)) as connection:

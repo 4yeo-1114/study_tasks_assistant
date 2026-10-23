@@ -12,7 +12,19 @@ Windows psql/数据库客户端 → 127.0.0.1:15432 → db 容器的 5432（Post
 api 容器 → db:5432（同一 Compose 网络内直接访问数据库服务）
 ```
 
-设置位置：[`compose.yaml`](compose.yaml) 的 `api.command` 用 `uvicorn ... --port 8000` 指定 API 容器内的监听端口；`api.ports` 把 Windows 的 `8001` 映射过去。`db` 使用的 `postgres:17` 镜像默认在容器内监听 `5432`；`db.ports` 把 Windows 的 `15432` 映射过去。`api.environment.DATABASE_URL` 中的 `@db:5432` 告诉应用向哪个数据库发起连接。`Dockerfile` 也有 Uvicorn 的默认 `CMD`，但当前 Compose 的 `command` 会覆盖它。`web/api.py` 定义的是应用和路由，不负责设置 Uvicorn 或 PostgreSQL 的监听端口。
+设置位置：[`compose.yaml`](compose.yaml) 的 `api.command` 用 `uvicorn ... --port 8000` 指定 API 容器内的监听端口；`api.ports` 把 Windows 的 `8001` 映射过去。`db` 使用 `pgvector/pgvector:pg17` 镜像，在容器内监听 `5432`；`db.ports` 把 Windows 的 `15432` 映射过去。`api.environment.DATABASE_URL` 中的 `@db:5432` 告诉应用向哪个数据库发起连接。`Dockerfile` 也有 Uvicorn 的默认 `CMD`，但当前 Compose 的 `command` 会覆盖它。`web/api.py` 定义的是应用和路由，不负责设置 Uvicorn 或 PostgreSQL 的监听端口。
+
+## PostgreSQL 集成测试
+
+`tests/test_postgres_integration.py` 只接受独立数据库 `study_tasks_test`，并要求 PostgreSQL 已安装 pgvector。Compose 默认创建的是 `study_tasks`，首次测试前创建独立测试库：
+
+```powershell
+docker compose exec db psql -U study -d study_tasks -c "CREATE DATABASE study_tasks_test"
+$env:TEST_DATABASE_URL = 'postgresql+psycopg://study:密码@127.0.0.1:15432/study_tasks_test'
+..\.venv\Scripts\python.exe -m pytest -q tests/test_postgres_integration.py
+```
+
+旧的 `study-postgres` 容器若使用纯 `postgres:17` 镜像，不具备 `vector` 扩展，不能作为该测试的数据库；请使用本 Compose 的 pgvector 服务或等价的 pgvector 镜像。
 
 Docker Compose 是读取 `compose.yaml`、一次配置并管理多个容器的工具；`services` 是容器化的程序，Compose 会为它们建立网络，`volumes` 保存数据。**应用代码不连接 Docker 引擎**。这里使用 Docker 是为了在隔离、可复现的环境中同时运行 API 和 PostgreSQL，练习容器网络、环境变量与部署；任务助手也能不使用 Docker 运行，例如未设置 `DATABASE_URL` 时使用本地 SQLite。参阅 [Docker 官方 Compose 说明](https://docs.docker.com/compose/intro/compose-application-model/)。
 
@@ -127,3 +139,10 @@ docker compose logs --no-color api | Select-String "这里替换为X-Request-ID"
 ```
 
 日志是单行 JSON 元数据，包含 `agent_run_id`、step、tool_call_id、duration_ms、candidate_count、token 和状态。日志不会记录 JWT、API Key、问题正文、工具参数或文档内容。可用 `STUDY_TASK_LOG_LEVEL` 调整 `study_task.*` 日志级别，默认是 `INFO`。
+
+# 0012 全文索引迁移说明
+
+升级到迁移 `0012_knowledge_search_provenance` 时，已有 `document_chunks` 的
+`search_tokens` 默认为空，迁移不会自动对旧正文分词。已有资料需要使用新的
+`document_version` 重新入库并确认其状态为 `ready`，关键词全文检索才会包含新版本；
+原活动版本在重建失败时仍可保留。此限制不影响向量检索。

@@ -1,0 +1,2 @@
+channel=msedge
+version=156.0.4314.42

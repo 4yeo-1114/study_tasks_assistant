@@ -4,12 +4,18 @@ from knowledge.rag import DocumentChunk, KeywordRetriever, tokenize, build_conte
 
 
 def test_tokenize_keeps_chinese_terms_and_english_words():
-    assert tokenize("确认 proposal 是否重复") == {
+    expected = {
         "确认",
         "proposal",
         "是否",
         "重复",
     }
+    assert expected <= tokenize("确认 proposal 是否重复")
+
+
+def test_tokenize_overlaps_chinese_bigrams_for_offset_queries():
+    assert "权限" in tokenize("与权限校验")
+    assert "校验" in tokenize("与权限校验")
 
 
 def test_retriever_ranks_matching_chunks_and_keeps_sources():

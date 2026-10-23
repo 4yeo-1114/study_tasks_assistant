@@ -43,6 +43,41 @@ def test_get_tasks_returns_empty_list(tmp_path):
     assert response.json() == []
 
 
+def test_task_can_record_learning_or_fitness_and_time_budget(tmp_path):
+    client = authenticated_client(tmp_path / "fitness.db")
+
+    response = client.post(
+        "/tasks",
+        json={
+            "title": "卧推训练",
+            "task_type": "fitness",
+            "estimated_minutes": 45,
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.json()["task_type"] == "fitness"
+    assert response.json()["estimated_minutes"] == 45
+    assert response.json()["actual_minutes"] is None
+
+    completed = client.patch(
+        f"/tasks/{response.json()['id']}",
+        json={"status": "completed", "actual_minutes": 50},
+    )
+    assert completed.status_code == 200
+    assert completed.json()["actual_minutes"] == 50
+
+
+def test_task_type_and_minutes_are_validated(tmp_path):
+    client = authenticated_client(tmp_path / "validation.db")
+
+    assert client.post("/tasks", json={"title": "x", "task_type": "other"}).status_code == 422
+    assert client.post("/tasks", json={"title": "x", "estimated_minutes": 0}).status_code == 422
+    created = client.post("/tasks", json={"title": "x"})
+    assert created.status_code == 201
+    assert client.patch(f"/tasks/{created.json()['id']}", json={"status": "completed", "actual_minutes": -1}).status_code == 422
+
+
 def test_post_task_persists_and_returns_created_task(tmp_path):
 
     client = authenticated_client(tmp_path / "test.db")

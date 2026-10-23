@@ -37,6 +37,16 @@ class Store:
         self.inserted.append((owner_id, chunk, document_version))
 
 
+class TransactionProbeStore(Store):
+    def __init__(self, sessions):
+        super().__init__()
+        self.sessions = sessions
+
+    def insert_chunk(self, session, *, owner_id, chunk, vector, document_version):
+        assert self.sessions.begin_called is True
+        super().insert_chunk(session, owner_id=owner_id, chunk=chunk, vector=vector, document_version=document_version)
+
+
 def setup():
     engine = create_engine("sqlite+pysqlite:///:memory:")
     Base.metadata.create_all(engine)
@@ -86,3 +96,56 @@ def test_ready_version_is_idempotent_and_skips_reembedding():
 
     assert count == 0
     assert second_model.calls == 0
+
+
+def test_embeddings_are_generated_before_write_transaction():
+    class Sessions:
+        begin_called = False
+
+        def begin(self):
+            Sessions.begin_called = True
+            return self
+
+        def __enter__(self):
+            return object()
+
+        def __exit__(self, *args):
+            return False
+
+    sessions = Sessions()
+    store = TransactionProbeStore(sessions)
+    ingest_document(
+        sessions,
+        store,
+        Model(),
+        owner_id=1,
+        source="guide.md",
+        text="abcdefghij",
+        config=IngestionConfig(chunk_size=5, overlap=0),
+    )
+    assert len(store.inserted) == 2
+
+
+def test_ingestion_uses_batch_encoder_when_available():
+    class BatchModel(Model):
+        def __init__(self):
+            super().__init__()
+            self.batch_calls = []
+
+        def encode_many(self, texts):
+            self.batch_calls.append(list(texts))
+            return [[1.0, 0.0] for _ in texts]
+
+    model = BatchModel()
+    store = Store()
+    ingest_document(
+        lambda: Session(create_engine("sqlite+pysqlite:///:memory:")),
+        store,
+        model,
+        owner_id=1,
+        source="guide.md",
+        text="abcdefghij",
+        config=IngestionConfig(chunk_size=5, overlap=0),
+    )
+    assert len(model.batch_calls) == 1
+    assert len(model.batch_calls[0]) == 2

@@ -1,0 +1,332 @@
+INFO:     Started server process [23872]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:52581 (Press CTRL+C to quit)
+INFO:     {"duration_ms":76.839,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"6691ddbfc75948c0be69762fc09f865a","status_code":200}
+INFO:     127.0.0.1:52584 - "GET /app/ HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.947,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"f7f67a25d78a4d81aa50869b9e5547b6","status_code":200}
+INFO:     127.0.0.1:52362 - "GET /app/ HTTP/1.1" 200 OK
+INFO:     {"duration_ms":5.308,"event":"http_request_completed","method":"GET","path":"/app/app.css","request_id":"c85f0b916abe4020a8f8a7a8580073a6","status_code":200}
+INFO:     127.0.0.1:52362 - "GET /app/app.css HTTP/1.1" 200 OK
+INFO:     {"duration_ms":5.107,"event":"http_request_completed","method":"GET","path":"/app/app.js","request_id":"77ad244c728f4650a4e341308417ed7d","status_code":200}
+INFO:     127.0.0.1:54703 - "GET /app/app.js HTTP/1.1" 200 OK
+INFO:     {"duration_ms":0.696,"event":"http_request_completed","method":"GET","path":"/favicon.ico","request_id":"00f2bd8c4a14412582c5d486ed9ce1be","status_code":404}
+INFO:     127.0.0.1:54703 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":130.782,"event":"http_request_completed","method":"POST","path":"/auth/register","request_id":"d6659bb982894c84a01b2f7dba217a73","status_code":201}
+INFO:     127.0.0.1:54703 - "POST /auth/register HTTP/1.1" 201 Created
+INFO:     {"duration_ms":99.251,"event":"http_request_completed","method":"POST","path":"/auth/login","request_id":"e94ec95a0e464cae90aed7d4aa48c977","status_code":200}
+INFO:     127.0.0.1:54703 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     {"duration_ms":40.096,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"de85fe21b97748d0b138f6c8215712a4","status_code":200}
+INFO:     127.0.0.1:52362 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":38.984,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"fd07a7bd1c2b4e4b9235802177549802","status_code":503}
+INFO:     127.0.0.1:59318 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":54.864,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"87f81ba2f81b468dabaa8ac833ab0bc1","status_code":200}
+INFO:     127.0.0.1:54703 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":50.297,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"d87daba6b3704a79bee06e3551c099ba","status_code":200}
+INFO:     127.0.0.1:64377 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":39.609,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"a0299addd6a341b19a398585d2af19be","status_code":200}
+INFO:     127.0.0.1:60321 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":6.987,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"b4dfaefa9da44fa69004f20b080745c7","status_code":404}
+INFO:     127.0.0.1:60321 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":9.425,"event":"http_request_completed","method":"POST","path":"/tasks","request_id":"ab9ea79b695f49ada75c7e4da8d1bb3b","status_code":201}
+INFO:     127.0.0.1:60321 - "POST /tasks HTTP/1.1" 201 Created
+INFO:     {"duration_ms":15.269,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"e979aa0ce02f4490996caf520dcf33fa","status_code":200}
+INFO:     127.0.0.1:60321 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.281,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"c8ac6710e1fc460b93fd804b753c1588","status_code":200}
+INFO:     127.0.0.1:64377 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.878,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"3975ae912b774ed7ab3ad15c7025ae1b","status_code":503}
+INFO:     127.0.0.1:59318 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":21.081,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"632bae5c4ac347a48ed6e664ebcc5546","status_code":200}
+INFO:     127.0.0.1:54703 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":18.707,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"4e5249e7ae13449db2eb46f033ae087b","status_code":200}
+INFO:     127.0.0.1:52362 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.966,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"f8d7f56b37eb490586ed6054e838ad80","status_code":404}
+INFO:     127.0.0.1:52362 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":12.805,"event":"http_request_completed","method":"POST","path":"/fitness/workouts","request_id":"2641420407ec4d07981ef6cb2566ba6d","status_code":201}
+INFO:     127.0.0.1:55419 - "POST /fitness/workouts HTTP/1.1" 201 Created
+INFO:     {"duration_ms":12.471,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"83086298e9ec4f428f21d7eaf7a5d0ce","status_code":200}
+INFO:     127.0.0.1:55419 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":10.863,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"eff62af1ab8248c29542a16d05b96b72","status_code":503}
+INFO:     127.0.0.1:62678 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":14.289,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"b74c5662e185422aa8599eebb2c02bc0","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":15.473,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"746a95dc4ca34baba32b451f740d66cd","status_code":200}
+INFO:     127.0.0.1:51281 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.072,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"ce6494a92f014a5bb7610b0ee82d35a5","status_code":200}
+INFO:     127.0.0.1:63796 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.548,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"e33354a229a94b2aa084e2242552be65","status_code":404}
+INFO:     127.0.0.1:63796 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":10.0,"event":"http_request_completed","method":"POST","path":"/fitness/workouts","request_id":"fbbd712ec8e34095976d820f0feaa8a5","status_code":201}
+INFO:     127.0.0.1:63796 - "POST /fitness/workouts HTTP/1.1" 201 Created
+INFO:     {"duration_ms":5.479,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"93556c988f2c47169a2d5b1f14ae37d0","status_code":503}
+INFO:     127.0.0.1:62678 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":12.212,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"3b75cb6b95bf473ebae765f2624d6ec9","status_code":200}
+INFO:     127.0.0.1:63796 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.352,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"9609eefb0fab41e2a0f9610e4a24179a","status_code":200}
+INFO:     127.0.0.1:51281 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":12.544,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"92e55995c6ad4169a576163cfee5c598","status_code":200}
+INFO:     127.0.0.1:55419 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":15.371,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"b073875eb3764b6db52bd2c1684720b3","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.167,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"01d55429ed9b461097e7a66ed32f1bdc","status_code":404}
+INFO:     127.0.0.1:65042 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":10.459,"event":"http_request_completed","method":"POST","path":"/fitness/weight","request_id":"e1c454daa9984a439927f418f25a0d45","status_code":201}
+INFO:     127.0.0.1:65042 - "POST /fitness/weight HTTP/1.1" 201 Created
+INFO:     {"duration_ms":7.737,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"8f1346f4c65443ff802b9850b78619b0","status_code":503}
+INFO:     127.0.0.1:63796 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":8.641,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"a1aead4aabb341ae9b19bc3b2fb7c995","status_code":200}
+INFO:     127.0.0.1:62678 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":12.989,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"fc695e2bed344ee289c125a31ba8370d","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.256,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"d49e346b26cf4611947d36751caa51d7","status_code":200}
+INFO:     127.0.0.1:51281 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.324,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"b91a6dff3fb64f7f97c899655add72c5","status_code":200}
+INFO:     127.0.0.1:55419 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.221,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"3b98a4110b644f8990a4196e5f222065","status_code":404}
+INFO:     127.0.0.1:55419 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":10.392,"event":"http_request_completed","method":"PUT","path":"/profile","request_id":"aecc50379bf9469e8e5c702d30bc48b8","status_code":200}
+INFO:     127.0.0.1:55419 - "PUT /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":7.724,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"e7c4defd7fda4953aebc36628b235349","status_code":503}
+INFO:     127.0.0.1:62678 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":11.523,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"2662570bc6744e7a92c7565c91fdca94","status_code":200}
+INFO:     127.0.0.1:55419 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":10.205,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"88d07d2d66a9402ebf39eb1c34bbe37f","status_code":200}
+INFO:     127.0.0.1:63796 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.901,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"9be0e36d653d4a03bb3388fbd958e684","status_code":200}
+INFO:     127.0.0.1:51281 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.696,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"5b2ce9b554db46a48b983e4ddf217c91","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.405,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"e72aa3a2886a47bcac35a4c130de983e","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":24.476,"event":"http_request_completed","method":"POST","path":"/plans/weekly","request_id":"bcd5214f32f248efb36a592d07aa239d","status_code":201}
+INFO:     127.0.0.1:65042 - "POST /plans/weekly HTTP/1.1" 201 Created
+INFO:     {"duration_ms":6.809,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"bd401974c255493dae91a3243704c5dc","status_code":503}
+INFO:     127.0.0.1:55419 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":11.753,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"1c11dd67a58748a98a7c0a0ebdbda047","status_code":200}
+INFO:     127.0.0.1:51281 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":11.313,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"301fbaf3d97b407f94f4bdc2e3f584c0","status_code":200}
+INFO:     127.0.0.1:62678 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.76,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"f15d3f4548bd4fd3a76e5fcb65e079ca","status_code":200}
+INFO:     127.0.0.1:65042 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.921,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"dd69015a870545a3947a6884d0c8f90f","status_code":200}
+INFO:     127.0.0.1:63796 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.893,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"e0c054b75e1843b4abc439d4c9a1d344","status_code":200}
+INFO:     127.0.0.1:63796 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"deciding","step":1,"trace_event":"model_request"}
+INFO:     retry_request request_id=18a42bff20d5481693fbb28fb67d948a:step-1 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=18a42bff20d5481693fbb28fb67d948a:step-1 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","duration_ms":2.457,"event":"model_request_completed","finish_reason":"tool_calls","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","response_tokens":2,"step":1}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_step_completed","finish_reason":"tool_calls","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","step":1}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"tool_calling","step":1,"trace_event":"tool_calls_received"}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"validating","step":1,"trace_event":"tool_calls_validating"}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_tool_selected","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks"}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"executing","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks","trace_event":"tool_execution_started"}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"deciding","step":2,"trace_event":"model_request"}
+INFO:     retry_request request_id=18a42bff20d5481693fbb28fb67d948a:step-2 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=18a42bff20d5481693fbb28fb67d948a:step-2 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","duration_ms":19.587,"event":"model_request_completed","finish_reason":"stop","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","response_tokens":2,"step":2}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_step_completed","finish_reason":"stop","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","step":2}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"answering","step":2,"trace_event":"final_answer_received"}
+INFO:     {"agent_run_id":"18a42bff20d5481693fbb28fb67d948a","event":"agent_trace","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","state":"completed","step":2,"trace_event":"answer_completed"}
+INFO:     {"duration_ms":172.3,"event":"http_request_completed","method":"POST","path":"/agent/chat","request_id":"ff0b4efe52ed483eaea4d01d037e96e4","status_code":200}
+INFO:     127.0.0.1:51523 - "POST /agent/chat HTTP/1.1" 200 OK
+INFO:     {"duration_ms":4.75,"event":"http_request_completed","method":"GET","path":"/agent/sessions/d05f44c3c53a46ba814d80836144d3c2","request_id":"ff44c9b3b431474296f11f0d47eb7eb4","status_code":200}
+INFO:     127.0.0.1:51523 - "GET /agent/sessions/d05f44c3c53a46ba814d80836144d3c2 HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.539,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"94da85fa98e940ff9abb9ae2c4001079","status_code":200}
+INFO:     127.0.0.1:51523 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":10.883,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"c882435041474f9693f4223fe2d6c6ae","status_code":503}
+INFO:     127.0.0.1:52844 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":16.982,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"4c7383f2e18f42909a0ca097ccb452e2","status_code":200}
+INFO:     127.0.0.1:49261 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.97,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"d2e36e8ce4fa44c08f3bdd10d2f6d959","status_code":200}
+INFO:     127.0.0.1:51251 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.468,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"06df70e539724a1fa974060287e8c7a5","status_code":200}
+INFO:     127.0.0.1:56709 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.634,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"58ec36d9568744d5b8d6870271517d85","status_code":200}
+INFO:     127.0.0.1:56709 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.048,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"bbea0a401623484bbd5b415cb2612bcd","status_code":304}
+INFO:     127.0.0.1:56709 - "GET /app/ HTTP/1.1" 304 Not Modified
+INFO:     {"duration_ms":13.341,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"423c7be6fc4a4a25af79a137c27dee91","status_code":503}
+INFO:     127.0.0.1:52844 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":23.747,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"c9de3a29d6ed4fa69121b815d62d0602","status_code":200}
+INFO:     127.0.0.1:51251 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":23.815,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"aa2c1d7b3e6d4045b9f75e1830f0a2a7","status_code":200}
+INFO:     127.0.0.1:49261 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":27.042,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"0f2ce0b5d95349aeb13fa4825291939a","status_code":200}
+INFO:     127.0.0.1:56709 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":23.313,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"dfa2d61ecf9c418db1035233f6759fdc","status_code":200}
+INFO:     127.0.0.1:51523 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.212,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"9073d44129724a4190f2528ae38ea2c6","status_code":200}
+INFO:     127.0.0.1:51523 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.965,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"67a016ad41a144b2a49a53755c00275d","status_code":200}
+INFO:     127.0.0.1:56235 - "GET /app/ HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.0,"event":"http_request_completed","method":"GET","path":"/app/app.css","request_id":"bfbe4390b77d412c9e9072780239aca6","status_code":200}
+INFO:     127.0.0.1:56235 - "GET /app/app.css HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.619,"event":"http_request_completed","method":"GET","path":"/app/app.js","request_id":"02b2c63a35eb44908b4bf142930765db","status_code":200}
+INFO:     127.0.0.1:57571 - "GET /app/app.js HTTP/1.1" 200 OK
+INFO:     {"duration_ms":64.162,"event":"http_request_completed","method":"POST","path":"/auth/register","request_id":"e7251c8a5d274d8eaf2c5364cf17595d","status_code":201}
+INFO:     127.0.0.1:57571 - "POST /auth/register HTTP/1.1" 201 Created
+INFO:     {"duration_ms":58.189,"event":"http_request_completed","method":"POST","path":"/auth/login","request_id":"67f99258bd4944a1a2a470198d3a349b","status_code":200}
+INFO:     127.0.0.1:57571 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     {"duration_ms":6.576,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"eb32c78787f34956a608afdf207b0df0","status_code":503}
+INFO:     127.0.0.1:59954 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":11.605,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"9c51abab27914c8f9e0649698c4ce049","status_code":200}
+INFO:     127.0.0.1:57571 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":9.89,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"1e2d584a2e154b6dad6e915fa8261daf","status_code":200}
+INFO:     127.0.0.1:54882 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.557,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"2a1e70c961fc4eb4803d8220b874463f","status_code":200}
+INFO:     127.0.0.1:56235 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.687,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"5b3f9980a3d24647943b028e7faf19ee","status_code":200}
+INFO:     127.0.0.1:60269 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.849,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"9a6e212433914dd7acd4a294d57b95f2","status_code":404}
+INFO:     127.0.0.1:60269 - "GET /profile HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":2.514,"event":"http_request_completed","method":"GET","path":"/agent/sessions/d05f44c3c53a46ba814d80836144d3c2","request_id":"293b1227e1254839b43eeb370d586889","status_code":404}
+INFO:     127.0.0.1:60269 - "GET /agent/sessions/d05f44c3c53a46ba814d80836144d3c2 HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":3.107,"event":"http_request_completed","method":"GET","path":"/plans/61f436a725b67b742bda2f280584e515","request_id":"b51f3479c7734d59aa5eeab166d08d2c","status_code":404}
+INFO:     127.0.0.1:60269 - "GET /plans/61f436a725b67b742bda2f280584e515 HTTP/1.1" 404 Not Found
+INFO:     {"duration_ms":6.831,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"3bda664d78ec43f19b28850ac6ad2bac","status_code":503}
+INFO:     127.0.0.1:51693 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":13.901,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"0e0ffd284731416fb287f1bf8452dc7a","status_code":200}
+INFO:     127.0.0.1:62579 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":9.322,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"3a9c7dc92b87433f8223fc35c7f71ca4","status_code":200}
+INFO:     127.0.0.1:59495 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":11.908,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"d2892a384e5b473595eb4e727fd1d641","status_code":200}
+INFO:     127.0.0.1:51209 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":10.328,"event":"http_request_completed","method":"POST","path":"/fitness/workouts","request_id":"49656ae9e8ee4d42966d59a3bcca7f33","status_code":201}
+INFO:     127.0.0.1:63339 - "POST /fitness/workouts HTTP/1.1" 201 Created
+INFO:     {"duration_ms":4.944,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"a1825983afb04272a9344838a40d5664","status_code":503}
+INFO:     127.0.0.1:57192 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":12.274,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"e554529f97014b9992594ff8640dd438","status_code":200}
+INFO:     127.0.0.1:63339 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":10.345,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"3fc7cc6f3464416ab37fda1feb6cfdd8","status_code":200}
+INFO:     127.0.0.1:63756 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.595,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"e1232b69d42746218a0eb376e241cbe6","status_code":200}
+INFO:     127.0.0.1:60923 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.903,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"de5377132eb84ae98110217637f084d2","status_code":200}
+INFO:     127.0.0.1:64018 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.474,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"386a7876a0a340cc9135fe92fc3f5fe2","status_code":200}
+INFO:     127.0.0.1:64018 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":5.851,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"35cfd7a305de44ec90fa808d0d12e959","status_code":503}
+INFO:     127.0.0.1:63339 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":12.812,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"42a182fef8ab445bb33184c7820c1f79","status_code":200}
+INFO:     127.0.0.1:64018 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":12.286,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"6def92c7aa5d4314879387613b992a87","status_code":200}
+INFO:     127.0.0.1:60923 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":11.932,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"81c45ac6997243d2ba73fd79fcb9024c","status_code":200}
+INFO:     127.0.0.1:63756 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":9.365,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"005a2d85cc07436cb27477c7a8c3080e","status_code":503}
+INFO:     127.0.0.1:63339 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":16.1,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"5e7ecbd468ea42bba43ffd862f7ed173","status_code":200}
+INFO:     127.0.0.1:60923 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.401,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"2a504c078d034ce2a47d0e6d2566b097","status_code":200}
+INFO:     127.0.0.1:63756 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":13.341,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"222d2d4365ee4b578dc6440c174dc6ff","status_code":200}
+INFO:     127.0.0.1:57192 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.838,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"f74988f8e26749d9b97f3acd4ac265aa","status_code":200}
+INFO:     127.0.0.1:64018 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.995,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"47fb7e41c8dd4cf28d0faa5ffc2138f2","status_code":200}
+INFO:     127.0.0.1:64018 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"deciding","step":1,"trace_event":"model_request"}
+INFO:     retry_request request_id=356d5a27b2054006ba073d11cbfcd9c4:step-1 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=356d5a27b2054006ba073d11cbfcd9c4:step-1 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","duration_ms":13.11,"event":"model_request_completed","finish_reason":"tool_calls","request_id":"895d9f4a11844be580009c24d7a26be8","response_tokens":2,"step":1}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_step_completed","finish_reason":"tool_calls","request_id":"895d9f4a11844be580009c24d7a26be8","step":1}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"tool_calling","step":1,"trace_event":"tool_calls_received"}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"validating","step":1,"trace_event":"tool_calls_validating"}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_tool_selected","request_id":"895d9f4a11844be580009c24d7a26be8","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks"}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"executing","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks","trace_event":"tool_execution_started"}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"deciding","step":2,"trace_event":"model_request"}
+INFO:     retry_request request_id=356d5a27b2054006ba073d11cbfcd9c4:step-2 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=356d5a27b2054006ba073d11cbfcd9c4:step-2 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","duration_ms":2.336,"event":"model_request_completed","finish_reason":"stop","request_id":"895d9f4a11844be580009c24d7a26be8","response_tokens":2,"step":2}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_step_completed","finish_reason":"stop","request_id":"895d9f4a11844be580009c24d7a26be8","step":2}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"answering","step":2,"trace_event":"final_answer_received"}
+INFO:     {"agent_run_id":"356d5a27b2054006ba073d11cbfcd9c4","event":"agent_trace","request_id":"895d9f4a11844be580009c24d7a26be8","state":"completed","step":2,"trace_event":"answer_completed"}
+INFO:     {"duration_ms":78.161,"event":"http_request_completed","method":"POST","path":"/agent/chat","request_id":"895d9f4a11844be580009c24d7a26be8","status_code":200}
+INFO:     127.0.0.1:51264 - "POST /agent/chat HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.322,"event":"http_request_completed","method":"GET","path":"/agent/sessions/0ecf11ff039e4899af090d23faed7f21","request_id":"5cb6618cd5224e63a1b4be8af06663bc","status_code":200}
+INFO:     127.0.0.1:51264 - "GET /agent/sessions/0ecf11ff039e4899af090d23faed7f21 HTTP/1.1" 200 OK
+INFO:     {"duration_ms":6.781,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"a3a986cf4a394478b99b6836fa2fa8d5","status_code":503}
+INFO:     127.0.0.1:56656 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":12.536,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"68ae13c3a04245eb9006285bb7429a7b","status_code":200}
+INFO:     127.0.0.1:53748 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.971,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"a6a4d2870a644e0dbb49214cbd76bf8b","status_code":200}
+INFO:     127.0.0.1:51264 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":11.91,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"159dea6188904341a532eb382cd85289","status_code":200}
+INFO:     127.0.0.1:55220 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":15.577,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"bcd230dde02845b5b4fe771156df8139","status_code":200}
+INFO:     127.0.0.1:53969 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":9.546,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"015b2fee440b438188be93c9665da925","status_code":200}
+INFO:     127.0.0.1:53969 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"deciding","step":1,"trace_event":"model_request"}
+INFO:     retry_request request_id=28f987a48781410983697a2c9fc50bbc:step-1 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=28f987a48781410983697a2c9fc50bbc:step-1 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","duration_ms":24.084,"event":"model_request_completed","finish_reason":"tool_calls","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","response_tokens":2,"step":1}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_step_completed","finish_reason":"tool_calls","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","step":1}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"tool_calling","step":1,"trace_event":"tool_calls_received"}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"validating","step":1,"trace_event":"tool_calls_validating"}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_tool_selected","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks"}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"executing","step":1,"tool_call_id":"call_e2e_list","tool_name":"list_tasks","trace_event":"tool_execution_started"}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"deciding","step":2,"trace_event":"model_request"}
+INFO:     retry_request request_id=28f987a48781410983697a2c9fc50bbc:step-2 operation=model_request attempt=1 status=started
+INFO:     retry_request request_id=28f987a48781410983697a2c9fc50bbc:step-2 operation=model_request attempt=1 status=succeeded
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","duration_ms":2.134,"event":"model_request_completed","finish_reason":"stop","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","response_tokens":2,"step":2}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_step_completed","finish_reason":"stop","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","step":2}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"answering","step":2,"trace_event":"final_answer_received"}
+INFO:     {"agent_run_id":"28f987a48781410983697a2c9fc50bbc","event":"agent_trace","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","state":"completed","step":2,"trace_event":"answer_completed"}
+INFO:     {"duration_ms":95.131,"event":"http_request_completed","method":"POST","path":"/agent/chat","request_id":"8a3d6b69f3944d18a6eae22dc6c52f36","status_code":200}
+INFO:     127.0.0.1:53969 - "POST /agent/chat HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.659,"event":"http_request_completed","method":"GET","path":"/agent/sessions/0ecf11ff039e4899af090d23faed7f21","request_id":"1c8f24c10ab34d7593f5c591be8c625e","status_code":200}
+INFO:     127.0.0.1:53969 - "GET /agent/sessions/0ecf11ff039e4899af090d23faed7f21 HTTP/1.1" 200 OK
+INFO:     {"duration_ms":6.152,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"74044081b66149babffc73f4f1b32640","status_code":503}
+INFO:     127.0.0.1:53748 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":9.388,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"d6c47c5899744726a36deff882a610d2","status_code":200}
+INFO:     127.0.0.1:56656 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":12.012,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"e60e467676da4691b8393f4947877e0d","status_code":200}
+INFO:     127.0.0.1:51264 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":15.525,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"0334bce5f25d4693911804f1449e59a9","status_code":200}
+INFO:     127.0.0.1:53969 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.922,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"daecdb435e544f9fabd29ad060a75172","status_code":200}
+INFO:     127.0.0.1:55220 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.831,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"d502f8e9ae994fab86e1f0454bec213c","status_code":200}
+INFO:     127.0.0.1:55220 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":3.004,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"62bea20d8ddf44edb7c01b8002adadb8","status_code":200}
+INFO:     127.0.0.1:54272 - "GET /app/ HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.89,"event":"http_request_completed","method":"GET","path":"/app/app.css","request_id":"4deb5e1cbbdb4f26bb52dadab262856d","status_code":200}
+INFO:     127.0.0.1:54272 - "GET /app/app.css HTTP/1.1" 200 OK
+INFO:     {"duration_ms":2.636,"event":"http_request_completed","method":"GET","path":"/app/app.js","request_id":"f57469be381e475190a1cde43c5eccfd","status_code":200}
+INFO:     127.0.0.1:57459 - "GET /app/app.js HTTP/1.1" 200 OK
+INFO:     {"duration_ms":66.197,"event":"http_request_completed","method":"POST","path":"/auth/login","request_id":"64c1f61fb2e34d5ab8a27ab6765213ce","status_code":200}
+INFO:     127.0.0.1:57459 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     {"duration_ms":12.513,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"ff8cabbd78a44f589deb52bccd1d2ea3","status_code":200}
+INFO:     127.0.0.1:57459 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":8.329,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"c55449b31cd84ebf9725dac2887e11f9","status_code":503}
+INFO:     127.0.0.1:52353 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":11.294,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"ea3da614ba8a4a2997a4bc5e390bc46e","status_code":200}
+INFO:     127.0.0.1:55653 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.661,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"4d1171f53b9d484fa9d0ff37d16b6ac4","status_code":200}
+INFO:     127.0.0.1:57450 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.843,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"fe995266fec7462ca4e403b1cfdb8f4b","status_code":200}
+INFO:     127.0.0.1:54272 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":4.345,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"3c0cc0756de34d07b9183dc721dbefec","status_code":200}
+INFO:     127.0.0.1:54272 - "GET /profile HTTP/1.1" 200 OK
+INFO:     {"duration_ms":14.723,"event":"http_request_completed","method":"GET","path":"/app/","request_id":"4d5e9eb24dca410eb25abc72db74c5e7","status_code":200}
+INFO:     127.0.0.1:65348 - "GET /app/ HTTP/1.1" 200 OK
+INFO:     {"duration_ms":7.065,"event":"http_request_completed","method":"GET","path":"/app/app.css","request_id":"6b80d8677930418f85a6ccdc39b8d143","status_code":200}
+INFO:     127.0.0.1:65348 - "GET /app/app.css HTTP/1.1" 200 OK
+INFO:     {"duration_ms":4.794,"event":"http_request_completed","method":"GET","path":"/app/app.js","request_id":"a967412c3d92400b878c736018bd70b2","status_code":200}
+INFO:     127.0.0.1:55406 - "GET /app/app.js HTTP/1.1" 200 OK
+INFO:     {"duration_ms":78.174,"event":"http_request_completed","method":"POST","path":"/auth/login","request_id":"3e10a72fc3f24033963e12a2ad71270b","status_code":200}
+INFO:     127.0.0.1:55406 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     {"duration_ms":9.222,"event":"http_request_completed","method":"GET","path":"/documents","request_id":"d1a921b56f674ada8f246d4f763f726b","status_code":503}
+INFO:     127.0.0.1:50611 - "GET /documents HTTP/1.1" 503 Service Unavailable
+INFO:     {"duration_ms":20.904,"event":"http_request_completed","method":"GET","path":"/tasks","request_id":"c9a88d5341ac4a758617f67585ce5ea2","status_code":200}
+INFO:     127.0.0.1:55406 - "GET /tasks HTTP/1.1" 200 OK
+INFO:     {"duration_ms":19.105,"event":"http_request_completed","method":"GET","path":"/tasks/progress","request_id":"9feb7b70252142169f64aeed445f8f9b","status_code":200}
+INFO:     127.0.0.1:65348 - "GET /tasks/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":19.503,"event":"http_request_completed","method":"GET","path":"/fitness/progress","request_id":"9303d42c009b4e6587a682ae045eb1af","status_code":200}
+INFO:     127.0.0.1:62180 - "GET /fitness/progress HTTP/1.1" 200 OK
+INFO:     {"duration_ms":17.444,"event":"http_request_completed","method":"GET","path":"/plans","request_id":"a9a1ca44c76b460b9704c7dd007964ff","status_code":200}
+INFO:     127.0.0.1:59561 - "GET /plans HTTP/1.1" 200 OK
+INFO:     {"duration_ms":5.93,"event":"http_request_completed","method":"GET","path":"/profile","request_id":"b9a01f29a21e40e9ad205dd929d7b21c","status_code":200}
+INFO:     127.0.0.1:59561 - "GET /profile HTTP/1.1" 200 OK

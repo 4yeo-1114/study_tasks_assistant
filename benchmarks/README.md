@@ -30,6 +30,16 @@
 
 ## 运行
 
+正式人工题集可先播种到独立实验库，再运行 PostgreSQL 对照：
+
+```powershell
+$env:TEST_DATABASE_URL = 'postgresql+psycopg://.../study_tasks_eval'
+.\.venv\Scripts\python.exe scripts/seed_pg_retrieval_dataset.py `
+  --fixture benchmarks/retrieval_labeled_v1.json
+```
+
+播种器只接受 `human_labeled` 且 `review_status=approved` 的题集，并要求实验库中不存在同名 owner；它不会写入生产库。
+
 从仓库根目录执行，输出路径必须是尚不存在的新目录：
 
 ```powershell
@@ -45,6 +55,28 @@
 Recall@k：前k条命中的不同相关 chunk 数／全部相关 chunk 数。MRR@k：首个相关结果的原始排名倒数取平均。重复结果不增加召回，也不改变原始排名。无答案题从 Recall/MRR 分母排除，单独统计结果为空的比例；这不是生成阶段拒答质量。
 
 P50/P95 使用排序样本线性插值。当前跨轮聚合相同问题；不是独立问题规模增加，也不是统计置信区间。
+
+## UPG-04 Agent 确定性场景
+
+从仓库根目录运行：
+
+```powershell
+.\.venv\Scripts\python.exe scripts/run_agent_scenarios.py
+```
+
+运行器执行 `tests/test_agent_scenario_suite.py`：78 个参数化行为场景和 1 个场景集完整性检查，共 79 tests。旧报告的“72 个唯一场景”更正为 71 个行为场景 + 1 个完整性检查，历史原件保留。场景使用 SQLite 和 `httpx.MockTransport`，覆盖 API 授权、多轮与重开会话、显式档案、计划约束、确认幂等与冲突、工具权限和停止/重试边界，不测在线模型效果或真实费用。
+
+新报告默认写入 `benchmarks/agent_scenarios_upg04/<UTC时间戳>/`，非空目录拒绝覆盖。逐条 JUnit、JSON、stdout/stderr、运行前源码快照 `source.zip`、SHA-256、HEAD/dirty 与 Python 环境一起保存；`source_unchanged_during_run` 检查运行期间源码是否变化。不同报告不能拼成同一版本的证据。
+
+真实 PostgreSQL 验收另行运行（需要 Docker Linux engine）：
+
+```powershell
+.\.venv\Scripts\python.exe scripts/run_pg_agent_acceptance.py
+# 在临时 PostgreSQL 上运行整个回归套件
+.\.venv\Scripts\python.exe scripts/run_pg_agent_acceptance.py --full-suite
+```
+
+运行器创建无持久卷的临时 `pgvector/pgvector:pg17` 容器、随机本地端口和专用 `study_tasks_test` 库，结束自动删除自己的容器，不使用现有业务库。密码不写入报告。产物保存到 `benchmarks/pg_agent_upg04/<UTC时间戳>/`，包含源码快照、原始结果、镜像 ID、命令和环境。PG 专项现有 9 tests，覆盖迁移、检索回归、checkpoint 重开/暂停恢复、提案创建与确认并发、消息序号分配、版本竞争、失败回滚和调整幂等。最终证据与边界见 [UPG-04 验收说明](../docs/UPG04持久Agent验收.md)。
 
 ## 产物与恢复
 
@@ -94,3 +126,17 @@ $env:TEST_DATABASE_URL = 'postgresql+psycopg://.../independent_experiment_db'
 10,000 条、20 个探针、5 轮的报告：`D:/dev-learning-baselines/2026-10-14-hnsw-probe-10000-full`。默认计划在 bare/生产 JOIN 中都未使用 HNSW，chunk 节点各输出 10,000 行；强制模式使用 HNSW，节点输出 5 行。这不是索引内部距离比较次数。脚本测得 P50/P95：bare 精确 29.95/41.80 ms、默认 32.20/44.63 ms、强制 HNSW 3.18/4.45 ms；生产 JOIN 精确 32.71/41.48 ms、默认 35.99/44.93 ms、强制 HNSW 33.11/48.92 ms。bare 强制 HNSW 的 top-5 平均重合率仅 0.69，生产 JOIN 为 1.00；因此这些数据只能说明“索引可被强制使用且存在召回取舍”，不能作为产品优化百分比。
 
 默认不使用 HNSW 是当前数据和 SQL 下的规划器选择，不等于索引无效。下一步应先在正式问题集上验证过滤改写和 `ef_search`/索引参数，再报告 Recall@5、MRR@5、P95 的变化。强制 planner 设置只存在于诊断脚本，不改变生产请求配置。
+
+## UPG-03 PostgreSQL 全文候选检索（2026-10-20）
+
+正式报告：`D:/dev-learning-baselines/2026-10-20-upg03-fts-or-labeled-v1`。实验使用独立 `study_tasks_eval` PostgreSQL/pgvector 数据库，`BAAI/bge-small-zh-v1.5`（512 维、1 线程），120 条人工核验题（development 40 / frozen 80）、10 个 active 合成 chunk；每策略预热 1 轮，计时 5 轮，共 600 条测量。计时范围为查询向量化、SQL 与融合，不含回答模型生成。
+
+| 策略 | Recall@5 | MRR@5 | 无答案正确率 | P50 / P95 (ms) |
+|---|---:|---:|---:|---:|
+| PostgreSQL FTS keyword | 0.925 | 0.879 | 0.800 | 3.41 / 4.82 |
+| pgvector | 1.000 | 0.918 | 0.000 | 11.39 / 15.51 |
+| RRF hybrid | 1.000 | 0.914 | 0.000 | 15.12 / 20.67 |
+
+首次运行报告 `D:/dev-learning-baselines/2026-10-20-upg03-fts-labeled-v1` 暴露 FTS 候选筛选使用 `plainto_tsquery` 的 AND 语义，导致包含核心词但不包含全部问题 token 的相关 chunk 在排序前被排除，关键词 Recall@5 为 0。修复为基于受限 `tokenize()` 输出构造 OR `to_tsquery`，再在候选窗口中按共享 token 确定性排序；该失败报告保留作为故障证据，修复后用新目录重跑得到上表。真实 PostgreSQL 回归测试包含“相关词 + 无关词”场景，防止恢复为 AND 截断。
+
+这组数据能证明当前实现的功能与这 10 条语料上的检索质量，不能证明生产规模性能、端到端 Agent 延迟或“检索提速百分比”。`plans.json` 显示该规模的向量查询未使用 HNSW，chunk 节点输出 10 行；HNSW 的规模与召回取舍仍以此前独立诊断报告为准。

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 import logging
 from time import perf_counter
 
-from knowledge.document_ingestion import IngestionConfig, ingest_document
+from knowledge.document_ingestion import IngestionConfig, ParsedPage, ingest_document
 from knowledge.document_lifecycle import DocumentLifecycle
 from knowledge.embedding_retrieval import EmbeddingModel
 from storage.models import Document
@@ -24,6 +24,7 @@ class DocumentUpload:
     document_version: str = "v1"
     chunk_size: int = 500
     overlap: int = 50
+    pages: tuple[ParsedPage, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,7 @@ class DocumentService:
                 owner_id=owner_id,
                 source=upload.source,
                 text=upload.content,
+                pages=upload.pages,
                 config=IngestionConfig(
                     chunk_size=upload.chunk_size,
                     overlap=upload.overlap,

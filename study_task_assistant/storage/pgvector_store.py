@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from knowledge.embedding_retrieval import EmbeddingModel, VectorSearchResult
 from knowledge.rag import DocumentChunk
+from knowledge.rag import tokenize
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,9 @@ def create_table_sql(config: PgVectorConfig):
         embedding_model TEXT NOT NULL,
         embedding_dimension INTEGER NOT NULL,
         document_version TEXT NOT NULL,
+        page_number INTEGER,
+        search_tokens TEXT NOT NULL DEFAULT '',
+        search_vector tsvector GENERATED ALWAYS AS (to_tsvector('simple', search_tokens)) STORED,
         UNIQUE (owner_id, source, chunk_id, document_version)
     )
     """)
@@ -102,11 +106,12 @@ class PgVectorStore:
             text("""
             INSERT INTO document_chunks (
                 owner_id, source, chunk_id, content, embedding,
-                embedding_model, embedding_dimension, document_version
+                embedding_model, embedding_dimension, document_version,
+                page_number, search_tokens
             ) VALUES (
                 :owner_id, :source, :chunk_id, :content,
                 CAST(:embedding AS vector), :embedding_model,
-                :embedding_dimension, :document_version
+                :embedding_dimension, :document_version, :page_number, :search_tokens
             )
             """),
             {
@@ -118,6 +123,8 @@ class PgVectorStore:
                 "embedding_model": self.config.model_name,
                 "embedding_dimension": self.config.dimension,
                 "document_version": document_version,
+                "page_number": chunk.page_number,
+                "search_tokens": " ".join(sorted(tokenize(chunk.text))),
             },
         )
 
@@ -165,6 +172,7 @@ class PgVectorStore:
         rows = session.execute(
             text(f"""
             SELECT document_chunks.source, document_chunks.chunk_id, document_chunks.content,
+                   document_chunks.page_number,
                    document_chunks.embedding <=> CAST(:query_vector AS vector) AS distance
             FROM document_chunks
             JOIN documents
@@ -179,7 +187,7 @@ class PgVectorStore:
         )
         return [
             VectorSearchResult(
-                chunk=DocumentChunk(row.source, row.chunk_id, row.content),
+                chunk=DocumentChunk(row.source, row.chunk_id, row.content, getattr(row, "page_number", None)),
                 score=1.0 - float(row.distance),
             )
             for row in rows

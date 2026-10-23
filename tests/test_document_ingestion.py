@@ -1,4 +1,5 @@
 from knowledge.document_ingestion import chunk_text
+from knowledge.document_ingestion import ParsedPage, chunk_pages
 
 
 def test_chunk_text_creates_numbered_chunks_with_overlap():
@@ -31,3 +32,16 @@ def test_chunk_text_keeps_short_final_chunk():
     chunks = chunk_text("abcdefgh", source="note.md", chunk_size=4, overlap=1)
 
     assert [item.text for item in chunks] == ["abcd", "defg", "gh"]
+
+
+def test_chunk_pages_keeps_page_provenance_and_paragraph_boundaries():
+    chunks = chunk_pages(
+        [ParsedPage(2, "第一段内容。\n\n第二段内容。")],
+        source="guide.pdf",
+        chunk_size=100,
+        overlap=0,
+    )
+
+    assert len(chunks) == 2
+    assert [(item.chunk_id, item.page_number) for item in chunks] == [(1, 2), (2, 2)]
+    assert all("\n\n" not in item.text for item in chunks)

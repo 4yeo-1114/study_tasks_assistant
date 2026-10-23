@@ -140,6 +140,59 @@ def test_upload_file_rejects_unsupported_extension(tmp_path):
     assert response.status_code == 415
 
 
+def test_upload_scanned_pdf_returns_explicit_unsupported_response(tmp_path):
+    from pypdf import PdfWriter
+    import io
+
+    writer = PdfWriter()
+    writer.add_blank_page(width=72, height=72)
+    payload_bytes = io.BytesIO()
+    writer.write(payload_bytes)
+    client, database, _ = make_client(tmp_path)
+    with client:
+        alice = auth_headers(client, "alice")
+        response = client.post(
+            "/documents/file",
+            files={"file": ("scan.pdf", payload_bytes.getvalue(), "application/pdf")},
+            data={"document_version": "v1"},
+            headers=alice,
+        )
+    database.dispose()
+
+    assert response.status_code == 415
+    assert "扫描" in response.json()["detail"]
+
+
+def test_upload_text_pdf_is_accepted(tmp_path):
+    from io import BytesIO
+    from pypdf import PdfWriter
+    from pypdf.generic import DecodedStreamObject, NameObject
+
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=72, height=72)
+    stream = DecodedStreamObject()
+    stream.set_data(b"BT 12 Tf 10 10 Td (Text PDF) Tj ET")
+    page[NameObject("/Contents")] = writer._add_object(stream)
+    payload = BytesIO()
+    writer.write(payload)
+
+    client, database, _ = make_client(tmp_path)
+    with client:
+        alice = auth_headers(client, "alice")
+        response = client.post(
+            "/documents/file",
+            files={"file": ("guide.pdf", payload.getvalue(), "application/pdf")},
+            data={"document_version": "v1"},
+            headers=alice,
+        )
+    database.dispose()
+
+    assert response.status_code == 201
+    assert response.json()["source"] == "guide.pdf"
+
+
+
+
 def test_foreign_document_is_hidden_and_version_conflict_is_409(tmp_path):
     client, database, _ = make_client(tmp_path)
     with client:

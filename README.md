@@ -1,6 +1,6 @@
 # Study Task Assistant
 
-一个面向个人学习资料的 Agent 工作台。用户可以管理学习任务、上传 Markdown/TXT 资料，并通过 DeepSeek Agent 查询自己的任务或资料库。
+一个面向个人学习和训练的 Agent 工作台。用户可以管理学习/健身任务、记录力量训练与体重、保存显式个人档案和周计划，并通过 Agent 查询自己的任务或资料库。
 
 ## 核心能力
 
@@ -11,6 +11,12 @@
 - SQL 阶段过滤 owner_id、ready/active 文档和当前版本，避免越权资料泄露。
 - 文档 ready/active/failed 生命周期、失败保留旧版本和并发激活保护。
 - Docker Compose 启动 FastAPI、PostgreSQL/pgvector 和 Web 工作台。
+- 健身记录闭环：训练场次、动作组、体重记录与确定性进步统计；任务支持学习/健身类型和预计/实际用时。
+- CSV 导入支持预览校验与按用户内容哈希幂等提交，重复提交不会重复创建训练记录。
+- 持久 Agent 会话、周计划 interrupt/resume 审批、版本冲突检查与结构化 pending 计划提案。
+- 工作台提供任务、训练趋势、资料、会话、档案与计划视图；浏览器端到端验收仍在进行。
+
+健身接口：`POST /fitness/workouts` 按日期写入动作组并计算训练量（重量×次数）；`POST /fitness/weight` 按日期写入或幂等更新体重；`GET /fitness/progress` 返回动作训练量、同动作最高重量和体重周均，不据此推断肌肉增长或体脂变化。
 
 ## 架构与数据流
 
@@ -80,6 +86,8 @@ docker compose ps
 ```
 
 Compose 会启动 PostgreSQL/pgvector、Alembic 迁移、FastAPI 和 FastEmbed 模型缓存。工作台地址为 http://127.0.0.1:8001/app/，Swagger 地址为 http://127.0.0.1:8001/docs。个人演示适合单体 Docker Compose + 托管 PostgreSQL/pgvector，当前项目规模不需要 Kubernetes。
+
+UPG-04 / UPG-05 实现边界与验收证据见 [UPG-04 持久 Agent 验收](docs/UPG04持久Agent验收.md) 和 [UPG-05 工作台验收](docs/UPG05工作台工程验收.md)。
 
 ## 测试与质量
 
